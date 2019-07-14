@@ -1,3 +1,11 @@
+#Maven build directory
+target/
+
+#Eclipse IDE project files
+.settings/
+.classpath
+.project
+
 # Compiled class file
 *.class
 
