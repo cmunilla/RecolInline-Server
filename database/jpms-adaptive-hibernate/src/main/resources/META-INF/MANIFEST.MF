@@ -1,6 +1,5 @@
 Manifest-Version: 1.0
-Automatic-Module-Name: antlr,commons.collections,commons.logging,dom4j,x
- ml.apis,ehcache,asm.attrs,asm,cglib
+Automatic-Module-Name: jpms.adaptive.hibernate
 Bnd-LastModified: 1562448903773
 Build-Jdk: 11.0.2
 Built-By: cmunilla@cmssi.fr
