@@ -9,7 +9,6 @@ import org.hibernate.Query;
 import cmssi.museum.dao.entity.Domain;
 import cmssi.museum.dao.entity.Model;
 import cmssi.museum.dao.entity.Type;
-import cmssi.museum.dao.entity.User;
 
 /**
  * the DomainService is an extended CRUDService dedicated to {@link Domain} entities

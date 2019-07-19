@@ -6,6 +6,7 @@ open module jpms.adaptive.jboss {
 
 	requires java.xml;
 	requires java.transaction.xa;
+	requires jpms.adaptive.hibernate;
 	
 	exports org.jboss.security.client;
 	exports org.jboss.deployers.structure.spi.helpers;
@@ -23,7 +24,6 @@ open module jpms.adaptive.jboss {
 	exports org.jboss.remoting.network.filter;
 	exports org.jboss.security.jacc;
 	exports org.jboss.kernel.spi.bootstrap;
-	exports org.apache.log4j.lf5.viewer.configure;
 	exports org.jboss.reloaded.naming.service;
 	exports org.jboss.wsf.spi.tools;
 	exports org.jboss.remoting.transport.socket;
@@ -52,7 +52,6 @@ open module jpms.adaptive.jboss {
 	exports org.apache.xerces.impl.dv.xs;
 	exports org.jboss.deployers.spi.attachments;
 	exports org.jboss.remoting.samples.transporter.multiple.server;
-	exports org.apache.log4j.or;
 	exports org.jboss.config.plugins.property;
 	exports org.jboss.aspects.patterns.observable;
 	exports org.jboss.kernel.plugins.lazy;
@@ -65,7 +64,6 @@ open module jpms.adaptive.jboss {
 	exports org.apache.tools.ant.filters.util;
 	exports org.jboss.kernel.spi;
 	exports org.jboss.logging.log4j;
-	exports org.apache.log4j.nt;
 	exports org.apache.xerces.impl.io;
 	exports org.jboss.kernel.spi.registry;
 	exports org.jboss.remoting.samples.transporter.complex.client;
@@ -114,7 +112,6 @@ open module jpms.adaptive.jboss {
 	exports org.jboss.metadata.validation.chain;
 	exports org.apache.xerces.impl.dv;
 	exports org.jboss.security.factories;
-	exports org.apache.log4j.xml;
 	exports org.jboss.deployers.plugins.structure;
 	exports org.jboss.ejb3.async.impl.interceptor;
 	exports org.jboss.ejb3.metamodel;
@@ -124,8 +121,7 @@ open module jpms.adaptive.jboss {
 	exports org.jboss.reflect.plugins.javassist;
 	exports org.jboss.aspects.remoting;
 	exports org.jboss.crypto;
-	exports org.jboss.remoting.samples.transporter.complex.server;
-	exports org.apache.log4j.lf5.viewer;
+	exports org.jboss.remoting.samples.transporter.complex.server;	
 	exports org.jboss.classloader.plugins.filter;
 	exports org.jboss.deployers.spi.deployer.managed;
 	exports org.jboss.remoting.marshal.encryption;
@@ -160,7 +156,6 @@ open module jpms.adaptive.jboss {
 	exports org.jboss.metadata.spi.stack;
 	exports javax.interceptor;
 	exports org.jboss.classloading.spi.visitor;
-	exports org.apache.log4j.net;
 	exports org.apache.xerces.dom;
 	exports org.jboss.aspects.asynchronous;
 	exports org.jboss.security.auth.callback;
@@ -386,8 +381,7 @@ open module jpms.adaptive.jboss {
 	exports org.jboss.classloading.spi.vfs.dependency;
 	exports org.jboss.remoting.transport.coyote.ssl;
 	exports org.jnp.interfaces.jnp;
-	exports org.jboss.classloading.spi.helpers;
-	exports org.apache.log4j.varia;
+	exports org.jboss.classloading.spi.helpers;	
 	exports org.jboss.remoting.transport.sslmultiplex;
 	exports org.jboss.metadata.annotation.creator.ejb.jboss;
 	exports org.jboss.security.mapping.providers.principal;
@@ -462,7 +456,6 @@ open module jpms.adaptive.jboss {
 	exports org.jboss.metatype.api.annotations;
 	exports org.jboss.aspects.asynchronous.aspects.jboss;
 	exports org.jboss.xb;
-	exports org.apache.log4j.helpers;
 	exports org.jboss.reloaded.naming.simple;
 	exports org.jboss.deployers.vfs.spi.structure;
 	exports org.apache.tools.ant.helper;
@@ -503,8 +496,7 @@ open module jpms.adaptive.jboss {
 	exports org.jboss.deployers.spi.annotations;
 	exports javassist.compiler;
 	exports org.jboss.util.id;
-	exports org.jboss.logging.filter;
-	exports org.apache.log4j.or.sax;
+	exports org.jboss.logging.filter;	
 	exports org.jboss.ha.client.loadbalance.aop;
 	exports org.jboss.wsf.spi.management.recording;
 	exports org.jboss.util.xml.catalog.helpers;
@@ -542,13 +534,11 @@ open module jpms.adaptive.jboss {
 	exports org.jboss.ejb3.security.client;
 	exports org.jboss.util.collection;
 	exports org.apache.html.dom;
-	exports org.jboss.ejb3.javaee;
-	exports org.apache.log4j.or.jms;
+	exports org.jboss.ejb3.javaee;	
 	exports org.jboss.metadata.spi.signature.javassist;
 	exports org.jboss.wsf.spi.metadata.webservices;
 	exports org.apache.tools.ant.taskdefs.compilers;
 	exports org.jboss.ejb3.endpoint;
-	exports org.apache.log4j.lf5.viewer.categoryexplorer;
 	exports org.jboss.annotation.ear;
 	exports org.jboss.metadata.validation.validator.ejb;
 	exports org.jboss.remoting.samples.config.factories;
@@ -610,7 +600,6 @@ open module jpms.adaptive.jboss {
 	exports org.jboss.metatype.plugins.types;
 	exports org.jboss.remoting.samples.chat.server;
 	exports bsh.reflect;
-	exports org.apache.log4j.spi;
 	exports org.apache.xerces.jaxp.datatype;
 	exports org.jboss.aspects.dbc;
 	exports org.jboss.ejb3.core.businessobject;
@@ -692,7 +681,6 @@ open module jpms.adaptive.jboss {
 	exports org.jboss.remoting.samples.transporter.multiple;
 	exports org.jboss.security.authorization;
 	exports org.jboss.ejb3.stateful;
-	exports org.apache.log4j.config;
 	exports org.apache.xerces.xs.datatypes;
 	exports org.jboss.metadata.generic;
 	exports org.quartz.ee.servlet;
@@ -731,7 +719,6 @@ open module jpms.adaptive.jboss {
 	exports org.jboss.metadata.plugins.scope;
 	exports org.apache.tools.ant.types.resources;
 	exports org.jboss.naming;
-	exports org.apache.log4j;
 	exports org.jboss.logging;
 	exports org.jboss.serial.io;
 	exports org.jboss.dependency.plugins.tracker;
@@ -757,7 +744,6 @@ open module jpms.adaptive.jboss {
 	exports org.jboss.injection;
 	exports org.jboss.jpa.impl.deployment;
 	exports org.jboss.wsf.spi.invocation.integration;
-	exports org.apache.log4j.lf5;
 	exports org.jboss.deployers.plugins.helpers;
 	exports org.jboss.ejb3.entity;
 	exports org.jboss.metadata.annotation.creator.web;
@@ -765,7 +751,6 @@ open module jpms.adaptive.jboss {
 	exports org.apache.xerces.xs;
 	exports com.thoughtworks.qdox.junit;
 	exports org.jboss.ejb3.metadata.annotation;
-	exports org.apache.log4j.jdbc;
 	exports org.jboss.ejb3.connectionmanager;
 	exports org.jboss.xb.binding.sunday;
 	exports org.jboss.deployers.vfs.plugins.dependency;
@@ -775,7 +760,7 @@ open module jpms.adaptive.jboss {
 	exports org.jboss.util.xml;
 	exports org.jboss.ejb3.tx;
 	exports org.jboss.deployers.vfs.spi.structure.modified;
-	exports org.apache.log4j.lf5.util;
+	
 	exports org.quartz.plugins.management;
 	exports org.jboss.metadata.plugins.repository.visitor;
 	exports org.jboss.security.authorization.util;
@@ -844,7 +829,6 @@ open module jpms.adaptive.jboss {
 	exports org.jboss.security.authorization.modules.web;
 	exports org.jboss.ejb3.proxy.impl.invocation;
 	exports junit.textui;
-	exports org.apache.log4j.jmx;
 	exports org.jboss.ejb3.metadata;
 	exports org.jboss.kernel.spi.dependency;
 	exports org.jboss.ejb3.cache.persistence;
@@ -858,7 +842,6 @@ open module jpms.adaptive.jboss {
 	exports org.apache.xerces.impl.xs.util;
 	exports org.jboss.metadata.ejb.jboss.jndipolicy.plugins;
 	exports org.jboss.aspects.patterns.readwritelock;
-	exports org.apache.log4j.chainsaw;
 	exports org.jboss.ejb3.proxy.impl.handler.session;
 	exports org.jboss.remoting.samples.transporter.custom.client;
 	exports org.jboss.wsf.spi.metadata.j2ee.serviceref;

@@ -21,6 +21,7 @@
 		<groupId>org.slf4j</groupId>
   		<artifactId>slf4j-simple</artifactId>
     	<version>1.7.7</version>
+    	<scope>provided</scope>
 	</dependency>
 	<dependency>		
   		<groupId>cmssi.museum.recolinline</groupId>
@@ -38,5 +39,43 @@
 		<version>${project.version}</version>
 	</dependency>
   </dependencies>
+  
+  <build>
+		<plugins>
+	        <plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-jar-plugin</artifactId>
+		        <configuration>
+		          <archive>
+		            <manifestFile>target/outputManifest/MANIFEST.MF</manifestFile>
+		          </archive>
+		        </configuration>
+      		</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+          		<version>2.3.6</version>
+                <extensions>true</extensions>
+                <executions>
+                	<execution>
+                		<phase>compile</phase>
+                		<goals>
+                			<goal>manifest</goal>
+                		</goals>                		
+						<configuration>
+							<manifestLocation>target/outputManifest/</manifestLocation>
+							<instructions>								
+								<Built-By>cmunilla@cmssi.fr</Built-By>
+								<Automatic-Module-Name>cmssi.recolinline.sql</Automatic-Module-Name>
+								<_nouses>true</_nouses>  
+								<_nodefaultversion>true</_nodefaultversion>
+								<_failok>true</_failok>
+							</instructions>
+						</configuration>
+                	</execution>
+                </executions>
+			</plugin>
+		</plugins>
+	</build>
   
 </project>

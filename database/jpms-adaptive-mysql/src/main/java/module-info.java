@@ -3,7 +3,9 @@
  * @version 0.3
  */
 open module jpms.adaptive.mysql {
-	 	
+
+	requires java.sql;
+	
 	exports com.mysql.cj.api;
 	exports com.mysql.cj.api.authentication;
 	exports com.mysql.cj.api.conf;
