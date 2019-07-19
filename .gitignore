@@ -1,3 +1,7 @@
+#jlink jre
+jre/
+jvm/
+
 #Maven build directory
 target/
 
