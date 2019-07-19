@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.Table;
 
 /**
@@ -14,14 +16,21 @@ import javax.persistence.Table;
  * or not) of the content of a Field for a specific Sheet.
  * 
  * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @version 0.3
  */
+@NamedNativeQueries({
+	@NamedNativeQuery(
+	name = "LinesFromField",
+	query = "CALL GetLines(:idFieldFk)",
+	resultClass = Line.class
+	)
+})
 @Entity
 @Table(name = "Line")
 public class Line implements Serializable
 {
 	/**
-	 * 
+	 * Generated long ID
 	 */
 	private static final long serialVersionUID = 2768107901772252081L;
 
@@ -81,40 +90,35 @@ public class Line implements Serializable
 	/**
 	 * @return the idLine
 	 */
-	public Integer getIdLine()
-	{
+	public Integer getIdLine() {
 		return idLine;
 	}
 
 	/**
 	 * @param idLine the idLine to set
 	 */
-	public void setIdLine(Integer idLine) 
-	{
+	public void setIdLine(Integer idLine) {
 		this.idLine = idLine;
 	}
 
 	/**
 	 * @return the idField
 	 */
-	public Integer getIdField() 
-	{
+	public Integer getIdField() {
 		return idField;
 	}
 
 	/**
 	 * @param idField the idField to set
 	 */
-	public void setIdField(Integer idField)
-	{
+	public void setIdField(Integer idField) {
 		this.idField = idField;
 	}
 
 	/**
 	 * @return the idSheet
 	 */
-	public Integer getIdSheet() 
-	{
+	public Integer getIdSheet() {
 		return idSheet;
 	}
 
@@ -125,8 +129,7 @@ public class Line implements Serializable
 	 * @param idSheet the Integer identifier of this Line
 	 * idSheet to set
 	 */
-	public void setIdSheet(Integer idSheet) 
-	{
+	public void setIdSheet(Integer idSheet) {
 		this.idSheet = idSheet;
 	}
 
@@ -135,8 +138,7 @@ public class Line implements Serializable
 	 * 
 	 * @return the String value of this Line
 	 */
-	public String getLine()
-	{
+	public String getLine() {
 		return line;
 	}
 
@@ -145,8 +147,7 @@ public class Line implements Serializable
 	 * 
 	 * @param line the String value to be set
 	 */
-	public void setLine(String line) 
-	{
+	public void setLine(String line)  {
 		this.line = line;
 	}
 }

@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * to which is associated a set of possible values
  *   
  * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @version 0.3
  */
 @Entity
 @Table(name = "Category")

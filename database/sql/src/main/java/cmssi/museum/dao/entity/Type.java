@@ -16,8 +16,8 @@ import javax.persistence.Table;
  * possible to create specific Types (new Category instances)
  * for it
  * 
- * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @author cmunilla@cmssi.fr 
+ * @version 0.3
  */
 @NamedNativeQueries({
 	@NamedNativeQuery(

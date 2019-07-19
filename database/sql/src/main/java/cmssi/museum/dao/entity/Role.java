@@ -18,15 +18,15 @@ import javax.persistence.Table;
  *   - READER: allowed to read a Field
  *   - NONE: no access rights
  *   
- * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @author cmunilla@cmssi.fr 
+ * @version 0.3
  */
 @Entity
 @Table(name = "Role")
 public class Role implements Serializable
 {
 	/**
-	 * 
+	 * Generated long ID
 	 */
 	private static final long serialVersionUID = 6775433342450905880L;
 
@@ -57,8 +57,7 @@ public class Role implements Serializable
      * @param label the String name of the Role to be
      * instantiated
      */
-    public Role(Integer idRole, String label)
-    {
+    public Role(Integer idRole, String label){
         this.idRole = idRole;
         this.label = label;
     }
@@ -68,8 +67,7 @@ public class Role implements Serializable
 	 * 
 	 * @return this Role's the Integer identifier 
 	 */
-	public Integer getIdRole() 
-	{
+	public Integer getIdRole() {
 		return idRole;
 	}
 
@@ -78,8 +76,7 @@ public class Role implements Serializable
 	 
 	 * @param idRole this Role's the Integer identifier 
 	 */
-	public void setIdRole(Integer idRole) 
-	{
+	public void setIdRole(Integer idRole) {
 		this.idRole = idRole;
 	}
     
@@ -88,8 +85,7 @@ public class Role implements Serializable
      * 
      * @param label the String label to be set
      */
-    public void setLabel(String label)
-    {
+    public void setLabel(String label) {
     	this.label = label;
     }
     
@@ -98,8 +94,7 @@ public class Role implements Serializable
      * 
      * @return this Role's String label
      */
-    public String getLabel()
-    {
+    public String getLabel() {
     	return this.label;
     }
 }

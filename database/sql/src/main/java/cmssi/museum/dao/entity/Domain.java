@@ -24,7 +24,7 @@ import javax.persistence.Table;
 public class Domain implements Serializable
 {
 	/**
-	 * 
+	 * Generated longID
 	 */
 	private static final long serialVersionUID = 5895287014740306651L;
 	
@@ -64,8 +64,7 @@ public class Domain implements Serializable
      * @param label the String name of the Domain to be
      * instantiated
      */
-    public Domain(Integer idDomain, Integer refDomain, String label)
-    {
+    public Domain(Integer idDomain, Integer refDomain, String label) {
         this.idDomain = idDomain;
         this.refDomain = refDomain;
         this.label = label;
@@ -76,8 +75,7 @@ public class Domain implements Serializable
      * 
      * @param idDomain the Integer identifier to be set
      */
-    public void setIdDomain(Integer idDomain)
-    {
+    public void setIdDomain(Integer idDomain) {
     	this.idDomain = idDomain;
     }
     
@@ -86,8 +84,7 @@ public class Domain implements Serializable
      * 
      * @return this Domain's Integer identifier
      */
-    public Integer getIdDomain()
-    {
+    public Integer getIdDomain() {
     	return this.idDomain;
     }
     
@@ -98,8 +95,7 @@ public class Domain implements Serializable
      * @param refDomain the Integer identifier of 
      * the inherited Domain
      */
-    public void setRefDomain(Integer refDomain)
-    {
+    public void setRefDomain(Integer refDomain){
     	this.refDomain = refDomain;
     }
     
@@ -110,8 +106,7 @@ public class Domain implements Serializable
      * @return the Integer identifier of the inherited
      * Domain
      */
-    public Integer getRefDomain()
-    {
+    public Integer getRefDomain(){
     	if(this.refDomain == null)
     	{
     		return new Integer(0);
@@ -124,8 +119,7 @@ public class Domain implements Serializable
      * 
      * @param label the String name to be set
      */
-    public void setLabel(String label)
-    {
+    public void setLabel(String label){
     	this.label = label;
     }
     
@@ -134,8 +128,7 @@ public class Domain implements Serializable
      * 
      * @return this Domain's String name
      */
-    public String getLabel()
-    {
+    public String getLabel() {
     	return this.label;
     }
 }

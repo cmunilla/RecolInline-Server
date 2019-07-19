@@ -2,11 +2,14 @@ package cmssi.museum.dao.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+
 /**
  * 
  * @author cmunilla@cmssi.fr
  * @version 0.2
  */
+@Entity
 public class MuseumUser implements Serializable
 {
 	/**

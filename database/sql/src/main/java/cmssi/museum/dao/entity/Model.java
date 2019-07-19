@@ -50,13 +50,6 @@ public class Model implements Serializable
     @Column
     private Integer idDomain; 
 
-	/**
-     * the Integer identifier of the Frame
-     * describing this Model
-     */
-    @Column
-    private Integer idFrame; 
-
     /**
      * the Model's String name
      */
@@ -76,16 +69,12 @@ public class Model implements Serializable
      * to be instantiated
      * @param idDomain the Integer identifier of the Domain 
      * to which belongs the Model to be instantiated
-     * @param idFrame the Integer identifier of the Frame
-     * describing the Model to be instantiated
      * @param label the String name of the Model to be 
      * instantiated
      */
-    public Model(Integer idModel, Integer idDomain, Integer idFrame, String label)
-    {
+    public Model(Integer idModel, Integer idDomain, String label) {
     	this.idModel = idModel;
     	this.idDomain = idDomain;
-    	this.idFrame= idFrame;
     	this.label = label;
     }
     
@@ -94,8 +83,7 @@ public class Model implements Serializable
 	 * 
 	 * @return the Integer identifier of this Model
 	 */
-	public Integer getIdModel() 
-	{
+	public Integer getIdModel() {
 		return idModel;
 	}
 
@@ -105,8 +93,7 @@ public class Model implements Serializable
 	 * @param idModel the Integer identifier to be
 	 * set
 	 */
-	public void setIdModel(Integer idModel)
-	{
+	public void setIdModel(Integer idModel){
 		this.idModel = idModel;
 	}
 	
@@ -117,8 +104,7 @@ public class Model implements Serializable
 	 * @return the Integer identifier of the Domain
 	 * to which this Model belongs
 	 */
-	public Integer getIdDomain() 
-	{
+	public Integer getIdDomain() {
 		return idDomain;
 	}
 
@@ -129,33 +115,8 @@ public class Model implements Serializable
 	 * @param idDomain the Integer identifier of the 
 	 * Domain to be set
 	 */
-	public void setIdDomain(Integer idDomain) 
-	{
+	public void setIdDomain(Integer idDomain) {
 		this.idDomain = idDomain;
-	}
-
-	/**
-	 * Returns the Integer identifier of the Frame
-	 * describing this Model
-	 * 
-	 * @return the Integer identifier of the Frame
-	 * describing this Model
-	 */
-	public Integer getIdFrame() 
-	{
-		return idFrame;
-	}
-
-	/**
-	 * Defines the Integer identifier of the Frame
-	 * describing this Model
-	 * 
-	 * @param idFrame the Integer identifier of the 
-	 * Frame to be set
-	 */
-	public void setIdFrame(Integer idFrame) 
-	{
-		this.idFrame = idFrame;
 	}
 
 	/**
@@ -163,8 +124,7 @@ public class Model implements Serializable
 	 * 
 	 * @return this Model's String name
 	 */
-	public String getLabel()
-	{
+	public String getLabel() {
 		return label;
 	}
 
@@ -173,8 +133,7 @@ public class Model implements Serializable
 	 * 
 	 * @param label the String name to be set
 	 */
-	public void setLabel(String label) 
-	{
+	public void setLabel(String label) {
 		this.label = label;
 	}
 }

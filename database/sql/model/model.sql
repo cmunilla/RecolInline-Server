@@ -65,19 +65,6 @@ ENGINE = InnoDB;
 CREATE INDEX `refDomain_lk_idx` ON `Domain` (`refDomain` ASC);
 
 -- -----------------------------------------------------
--- Table `Frame`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `Frame` ;
-
-CREATE TABLE IF NOT EXISTS `Frame` (
-  `idFrame` INT NOT NULL AUTO_INCREMENT,
-  `row` INT NOT NULL,
-  `column` INT NOT NULL,
-  PRIMARY KEY (`idFrame`))
-  
-ENGINE = InnoDB;
-
--- -----------------------------------------------------
 -- Table `Model`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Model` ;
@@ -85,18 +72,12 @@ DROP TABLE IF EXISTS `Model` ;
 CREATE TABLE IF NOT EXISTS `Model` (
   `idModel` INT NOT NULL AUTO_INCREMENT,
   `idDomain` INT NOT NULL,
-  `idFrame` INT NOT NULL,
   `label` VARCHAR(256) NOT NULL,
   PRIMARY KEY (`idModel`),
   CONSTRAINT `domain_idDomain_fk`
     FOREIGN KEY (`idDomain`)
     REFERENCES `Domain` (`idDomain`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION,
-  CONSTRAINT `domain_idFrame_fk`
-    FOREIGN KEY (`idFrame`)
-    REFERENCES `Frame` (`idFrame`)
-    ON DELETE RESTRICT
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -130,7 +111,6 @@ CREATE TABLE IF NOT EXISTS `Field` (
   `idField` INT NOT NULL AUTO_INCREMENT,
   `idModel` INT NOT NULL,
   `idType` INT NOT NULL,
-  `idFrame` INT NOT NULL,
   `label` VARCHAR(256) NOT NULL,
   PRIMARY KEY (`idField`),
   CONSTRAINT `field_idModel_fk`
@@ -142,17 +122,11 @@ CREATE TABLE IF NOT EXISTS `Field` (
     FOREIGN KEY (`idType`)
     REFERENCES `Type` (`idType`)
     ON DELETE RESTRICT
-    ON UPDATE NO ACTION,
-  CONSTRAINT `field_idFrame_fk`
-    FOREIGN KEY (`idFrame`)
-    REFERENCES `Frame` (`idFrame`)
-    ON DELETE RESTRICT
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE INDEX `field_idType_fk_idx` ON `Field` (`idType` ASC);
 CREATE INDEX `field_idModel_fk_idx` ON `Field` (`idModel` ASC);
-CREATE INDEX `field_idFrame_fk_idx` ON `Field` (`idFrame` ASC);
 
 -- -----------------------------------------------------
 -- Table `Role`
@@ -468,11 +442,11 @@ BEGIN
     SELECT refDomain INTO parentDomain FROM Domain WHERE Domain.idDomain = idDomainFk;
     IF parentDomain IS NULL
     THEN
-		SELECT idModel, idDomain, idFrame, label FROM Model WHERE Model.idDomain = idDomainFk;
+		SELECT idModel, idDomain, label FROM Model WHERE Model.idDomain = idDomainFk;
 	ELSE
         SELECT GetModels (parentDomain)
         UNION ALL
-        SELECT idModel, idDomain, idFrame, label FROM Model WHERE Model.idDomain = idDomainFk;
+        SELECT idModel, idDomain, label FROM Model WHERE Model.idDomain = idDomainFk;
 	END IF;
 END;$$
 

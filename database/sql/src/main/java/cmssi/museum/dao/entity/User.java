@@ -15,8 +15,8 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @author cmunilla@cmssi.fr 
+ * @version 0.3
  */
 @SqlResultSetMapping(
     name="museumUser",
@@ -39,10 +39,10 @@ import javax.persistence.Table;
 })
 @Entity
 @Table(name = "User")
-public class User implements Serializable
-{
+public class User implements Serializable {
+	
 	/**
-	 * 
+	 * Generated long ID
 	 */
 	private static final long serialVersionUID = 4167726911160367986L;
 
@@ -81,8 +81,7 @@ public class User implements Serializable
      * @param password the Strig password of the user allowing to be identified 
      * by the system
      */
-    public User(Integer idUser, String login, String password)
-    {
+    public User(Integer idUser, String login, String password) {
     	this.idUser = idUser;
     	this.login = login;
     	this.password = password;
@@ -93,8 +92,7 @@ public class User implements Serializable
 	 * 
 	 * @return the Integer identifier of this User
 	 */
-	public Integer getIdUser() 
-	{
+	public Integer getIdUser() {
 		return this.idUser;
 	}
 
@@ -105,8 +103,7 @@ public class User implements Serializable
 	 * @param idUser the Integer identifier of this
 	 * User to be set
 	 */
-	public void setIdUser(Integer idUser) 
-	{
+	public void setIdUser(Integer idUser) {
 		this.idUser = idUser;
 	}
 
@@ -115,8 +112,7 @@ public class User implements Serializable
 	 * 
 	 * @return the String login of this User
 	 */
-	public String getLogin() 
-	{
+	public String getLogin() {
 		return this.login;
 	}
 
@@ -125,8 +121,7 @@ public class User implements Serializable
 	 * 
 	 * @param login the String login of this User to be set
 	 */
-	public void setLogin(String login) 
-	{
+	public void setLogin(String login) {
 		this.login = login;
 	}
 
@@ -135,8 +130,7 @@ public class User implements Serializable
 	 * 
 	 * @return the encoded String password of this User
 	 */
-	public String getPassword() 
-	{
+	public String getPassword() {
 		return this.password;
 	}
 
@@ -145,8 +139,7 @@ public class User implements Serializable
 	 * 
 	 * @param password the String password of this User to be set
 	 */
-	public void setPassword(String password) 
-	{
+	public void setPassword(String password) {
 		this.password = password;
 	}
 	

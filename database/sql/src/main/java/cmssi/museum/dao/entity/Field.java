@@ -13,14 +13,14 @@ import javax.persistence.Table;
  * about an artefact
  * 
  * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @version 0.3
  */
 @Entity
 @Table(name = "Field")
-public class Field implements Serializable
-{
+public class Field implements Serializable {
+	
 	/**
-	 * 
+	 * Generated long ID
 	 */
 	private static final long serialVersionUID = 2496563128427651953L;
 
@@ -38,13 +38,12 @@ public class Field implements Serializable
      */
     @Column
     private Integer idType; 
-
-	/**
-     * the Integer identifier of the Frame
-     * describing this Field
+    
+    /**
+     * the Integer identifier of the Model this Field belongs to
      */
     @Column
-    private Integer idFrame; 
+    private Integer idModel; 
 
     /**
      * the Field's String name
@@ -64,15 +63,12 @@ public class Field implements Serializable
      * to be instantiated
      * @param idType the Integer identifier of the Type of
      * the Field to be instantiated
-     * @param idFrame the Integer identifier of the Frame 
-     * describing the Field to be instantiated
      * @param label the String name of the Field to be instantiated
      */
-    public Field(Integer idField, Integer idType, Integer idFrame, String label)
-    {
+    public Field(Integer idField, Integer idModel, Integer idType, String label) {
     	this.idField = idField;
+    	this.idModel = idModel;
     	this.idType = idType;
-    	this.idFrame = idFrame;
     	this.label = label;
     }
 
@@ -81,8 +77,7 @@ public class Field implements Serializable
 	 * 
 	 * @return the Integer identifier of this Field
 	 */
-	public Integer getIdField() 
-	{
+	public Integer getIdField() {
 		return idField;
 	}
 
@@ -92,66 +87,59 @@ public class Field implements Serializable
 	 * @param idField the Integer identifier to be
 	 * set
 	 */
-	public void setIdField(Integer idField)
-	{
+	public void setIdField(Integer idField){
 		this.idField = idField;
 	}
 
 	/**
 	 * Returns the Integer identifier of the Type
-	 * of this Field
+	 * applying to this Field
 	 * 
 	 * @return the Integer identifier of this Field's
 	 * Type
 	 */
-	public Integer getIdType() 
-	{
+	public Integer getIdType() {
 		return idType;
 	}
 
 	/**
 	 * Defines the Integer identifier of the Type
-	 * of this Field
+	 * applying to this Field
 	 * 
 	 * @param idType the Integer identifier of the
 	 * Type to be set
 	 */
-	public void setIdType(Integer idType) 
-	{
+	public void setIdType(Integer idType) {
 		this.idType = idType;
 	}
-
 	/**
-	 * Returns the Integer identifier of the Frame
-	 * describing this Field
+	 * Returns the Integer identifier of the Model
+	 * this Field belongs to
 	 * 
-	 * @return the Integer identifier of the Frame
-	 * describing this field
+	 * @return the Integer identifier of the Model holding
+	 * this Field
 	 */
-	public Integer getIdFrame() 
-	{
-		return idFrame;
+	public Integer getIdModel() {
+		return idModel;
 	}
 
 	/**
-	 * Defines the Integer identifier of the Frame
-	 * describing this Field
+	 * Defines the Integer identifier of the Model
+	 * this Field belongs to
 	 * 
-	 * @param idFrame the Integer identifier of the 
-	 * Frame to be set
+	 * @param idModel the Integer identifier of the
+	 * Model holding this Field
 	 */
-	public void setIdFrame(Integer idFrame) 
-	{
-		this.idFrame = idFrame;
+	public void setIdModel(Integer idModel) {
+		this.idModel = idModel;
 	}
-
+	
 	/**
 	 * Returns the String label of this Field
 	 * 
 	 * @return this Field's String label
 	 */
-	public String getLabel()
-	{
+	public String getLabel() {
 		return label;
 	}
 
@@ -160,8 +148,7 @@ public class Field implements Serializable
 	 * 
 	 * @param label the String label to be set
 	 */
-	public void setLabel(String label) 
-	{
+	public void setLabel(String label) {
 		this.label = label;
 	}
 }

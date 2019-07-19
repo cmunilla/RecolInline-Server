@@ -80,8 +80,7 @@ public class Contact implements Serializable
      * @param phone the String formated phone number of the Contact to be 
      * instantiated
      */
-    public Contact(Integer idContact, String label, String address, String email, String phone)
-    {
+    public Contact(Integer idContact, String label, String address, String email, String phone) {
     	this.idContact = idContact;
     	this.label = label;
     	this.address = address;
@@ -94,8 +93,7 @@ public class Contact implements Serializable
 	 * 
 	 * @return the Integer identifier of this Contact
 	 */
-	public Integer getIdContact() 
-	{
+	public Integer getIdContact() {
 		return this.idContact;
 	}
 
@@ -105,8 +103,7 @@ public class Contact implements Serializable
 	 * @param idContact the Integer identifier of this Contact 
 	 * to be set
 	 */
-	public void setIdContact(Integer idContact) 
-	{
+	public void setIdContact(Integer idContact) {
 		this.idContact = idContact;
 	}
 
@@ -115,8 +112,7 @@ public class Contact implements Serializable
 	 * 
 	 * @return the String label of this Contact
 	 */
-	public String getLabel() 
-	{
+	public String getLabel() {
 		return this.label;
 	}
 
@@ -126,8 +122,7 @@ public class Contact implements Serializable
 	 * @param label the String label of this Contact 
 	 * to be set
 	 */
-	public void setLabel(String label) 
-	{
+	public void setLabel(String label) {
 		this.label = label;
 	}
 
@@ -137,8 +132,7 @@ public class Contact implements Serializable
 	 * 
 	 * @return the String address of this Contact
 	 */
-	public String getAddress() 
-	{
+	public String getAddress() {
 		return this.address;
 	}
 
@@ -148,8 +142,7 @@ public class Contact implements Serializable
 	 * @param label the String address of this Contact 
 	 * to be set
 	 */
-	public void setAddress(String address) 
-	{
+	public void setAddress(String address) {
 		this.address = address;
 	}
 
@@ -159,8 +152,7 @@ public class Contact implements Serializable
 	 * 
 	 * @return the String email address of this Contact
 	 */
-	public String getEmail() 
-	{
+	public String getEmail() {
 		return this.email;
 	}
 
@@ -170,8 +162,7 @@ public class Contact implements Serializable
 	 * @param label the String email address of this Contact 
 	 * to be set
 	 */
-	public void setEmail(String email) 
-	{
+	public void setEmail(String email) {
 		this.email = email;
 	}
 
@@ -180,8 +171,7 @@ public class Contact implements Serializable
 	 * 
 	 * @return the String formated phone number of this Contact
 	 */
-	public String getPhone() 
-	{
+	public String getPhone() {
 		return this.phone;
 	}
 
@@ -191,8 +181,7 @@ public class Contact implements Serializable
 	 * @param label the String formated phone number of this Contact 
 	 * to be set
 	 */
-	public void setPhone(String phone) 
-	{
+	public void setPhone(String phone) {
 		this.phone = phone;
 	}
 }

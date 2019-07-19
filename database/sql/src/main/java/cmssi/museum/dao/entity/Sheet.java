@@ -14,22 +14,37 @@ import javax.persistence.Table;
  * A Sheet is an instance of a Domain. It is so dedicated to 
  * the description of an artefact
  * 
- * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @author cmunilla@cmssi.fr 
+ * @version 0.3
  */
 @NamedNativeQueries({
 	@NamedNativeQuery(
 	name = "SheetsFromMuseum",
-	query = "CALL GetSheetsFromMuseum(:idMuseumFk)",
+	query = "CALL GetSheetsFromMuseum(:idMuseumFk,:fstIndex,:lstIndex)",
 	resultClass = Sheet.class
+	),
+	@NamedNativeQuery(
+	name = "SheetsFromDomainFromMuseum",
+	query = "CALL GetSheetsFromDomainFromMuseum(:idMuseumFk,:idDomainFk,:fstIndex,:lstIndex)",
+	resultClass = Sheet.class
+	),
+	@NamedNativeQuery(
+	name = "SheetsCountFromMuseum",
+	query = "CALL GetSheetsCountFromMuseum(:idMuseumFk)",
+	resultClass = int.class
+	),
+	@NamedNativeQuery(
+	name = "SheetsCountFromDomainFromMuseum",
+	query = "CALL GetSheetsCountFromMuseum(:idMuseumFk,:idDomainFk)",
+	resultClass = int.class
 	)
 })
 @Entity
 @Table(name = "Sheet")
-public class Sheet implements Serializable
-{
+public class Sheet implements Serializable {
+	
 	/**
-	 * 
+	 * Generated long ID
 	 */
 	private static final long serialVersionUID = -9120946162721048799L;
 
@@ -42,15 +57,13 @@ public class Sheet implements Serializable
     private Integer idSheet; 
     
     /**
-     * the Integer identifier of the 
-     * Domain this Sheet is an instance of
+     * the Integer identifier of the Domain this sheet is an instance of
      */
     @Column
     private Integer idDomain; 
     
     /**
-     * the Integer identifier of the 
-     * Museum the described artifat belongs to
+     * the Integer identifier of the Museum this sheet belongs to
      */
     @Column
     private Integer idMuseum; 
@@ -87,48 +100,42 @@ public class Sheet implements Serializable
 	/**
 	 * @return the idSheet
 	 */
-	public Integer getIdSheet() 
-	{
+	public Integer getIdSheet() {
 		return idSheet;
 	}
 
 	/**
 	 * @param idSheet the idSheet to set
 	 */
-	public void setIdSheet(Integer idSheet) 
-	{
+	public void setIdSheet(Integer idSheet) {
 		this.idSheet = idSheet;
 	}
 	
 	/**
 	 * @return the idDomain
 	 */
-	public Integer getIdDomain()
-	{
+	public Integer getIdDomain(){
 		return idDomain;
 	}
 
 	/**
 	 * @param idDomain the idDomain to set
 	 */
-	public void setIdDomain(Integer idDomain) 
-	{
+	public void setIdDomain(Integer idDomain) {
 		this.idDomain = idDomain;
 	}
 
 	/**
 	 * @return the idDomain
 	 */
-	public Integer getIdMuseum()
-	{
+	public Integer getIdMuseum(){
 		return idMuseum;
 	}
 
 	/**
 	 * @param idMuseum the idMiuseum to set
 	 */
-	public void setIdMuseum(Integer idMuseum) 
-	{
+	public void setIdMuseum(Integer idMuseum) {
 		this.idMuseum = idMuseum;
 	}
     
@@ -137,8 +144,7 @@ public class Sheet implements Serializable
      * 
      * @param label the String name to be set
      */
-    public void setLabel(String label)
-    {
+    public void setLabel(String label){
     	this.label = label;
     }
     
@@ -147,8 +153,7 @@ public class Sheet implements Serializable
      * 
      * @return this Sheet's String name
      */
-    public String getLabel()
-    {
+    public String getLabel() {
     	return this.label;
     }
 }

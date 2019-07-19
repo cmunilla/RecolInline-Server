@@ -9,21 +9,20 @@ import javax.persistence.Id;
 import javax.persistence.Table;
  
 /**
- * In the data model a Visibility define an access policy: 
- * 
+ * In the data model a Visibility define an access policy:  * 
  * 		-HIDDEN : no access
  * 		-DISABLED : read access
  * 		-ENABLED : read/write access
  * 
- * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @author cmunilla@cmssi.fr 
+ * @version 0.3
  */
 @Entity
 @Table(name = "Visibility")
 public class Visibility implements Serializable
 {
 	/**
-	 * 
+	 * Generated longID
 	 */
 	private static final long serialVersionUID = -2957525947424833873L;
 
@@ -54,8 +53,7 @@ public class Visibility implements Serializable
      * @param label the String name of the Visibility to be
      * instantiated
      */
-    public Visibility(Integer idVisibility, String label)
-    {
+    public Visibility(Integer idVisibility, String label) {
         this.idVisibility = idVisibility;
         this.label = label;
     }
@@ -65,8 +63,7 @@ public class Visibility implements Serializable
 	 * 
 	 * @return this Visibility's the Integer identifier 
 	 */
-	public Integer getIdVisibility() 
-	{
+	public Integer getIdVisibility() {
 		return idVisibility;
 	}
 
@@ -76,8 +73,7 @@ public class Visibility implements Serializable
 	 * @param idVisibility this Visibility's the Integer 
 	 * identifier 
 	 */
-	public void setIdVisibility(Integer idVisibility) 
-	{
+	public void setIdVisibility(Integer idVisibility) {
 		this.idVisibility = idVisibility;
 	}
     
@@ -86,8 +82,7 @@ public class Visibility implements Serializable
      * 
      * @param label the String name to be set
      */
-    public void setLabel(String label)
-    {
+    public void setLabel(String label) {
     	this.label = label;
     }
     
@@ -96,8 +91,7 @@ public class Visibility implements Serializable
      * 
      * @return this Visibility's String name
      */
-    public String getLabel()
-    {
+    public String getLabel() {
     	return this.label;
     }
 }
