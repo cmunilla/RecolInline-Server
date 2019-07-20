@@ -425,7 +425,6 @@ BEGIN
 END;$$
 
 DELIMITER ;
-
 -- -----------------------------------------------------
 -- procedure GetModels
 -- -----------------------------------------------------
@@ -451,9 +450,8 @@ BEGIN
 END;$$
 
 DELIMITER ;
-
 -- -----------------------------------------------------
--- procedure GetSheetsForMuseum
+-- procedure GetSheetsFromMuseum
 -- -----------------------------------------------------
 
 USE `recolinline`;
@@ -461,13 +459,67 @@ DROP procedure IF EXISTS `GetSheetsFromMuseum`;
 
 DELIMITER $$
 USE `recolinline`$$
-CREATE PROCEDURE `GetSheetsFromMuseum`(IN idMuseumFk INT)
+CREATE PROCEDURE `GetSheetsFromMuseum`(IN idMuseumFk INT, IN fstIndex INT, IN lstIndex INT)
 BEGIN
-	SELECT idSheet, idMuseum, idDomain, label FROM Sheet WHERE Sheet.idMuseum = idMuseumFk;
+	DECLARE ind INT;
+	SET ind = fstIndex -1;
+	SELECT idSheet, idMuseum, idDomain, label FROM Sheet WHERE Sheet.idMuseum = idMuseumFk
+	LIMIT ind,lstIndex;
 END;$$
 
 DELIMITER ;
+-- -----------------------------------------------------
+-- procedure GetSheetsCountFromMuseum
+-- -----------------------------------------------------
 
+USE `recolinline`;
+DROP procedure IF EXISTS `GetSheetsCountFromMuseum`;
+
+DELIMITER $$
+USE `recolinline`$$
+CREATE PROCEDURE `GetSheetsFromMuseum`(IN idMuseumFk INT)
+BEGIN
+	SELECT COUNT(*) FROM Sheet WHERE Sheet.idMuseum = idMuseumFk;
+END;$$
+
+DELIMITER ;
+-- -----------------------------------------------------
+-- procedure GetSheetsFromDomainFromMuseum
+-- -----------------------------------------------------
+
+USE `recolinline`;
+DROP procedure IF EXISTS `GetSheetsFromDomainFromMuseum`;
+
+DELIMITER $$
+USE `recolinline`$$
+CREATE PROCEDURE `GetSheetsFromMuseum`(IN idMuseumFk INT, IN idDomainFk, IN fstIndex INT, IN lstIndex INT)
+BEGIN
+	DECLARE ind INT;
+	SET ind = fstIndex -1;
+	SELECT idSheet, idMuseum, idDomain, label FROM Sheet
+	WHERE Sheet.idMuseum = idMuseumFk
+	AND Sheet.idDomain = idDomainFk
+	LIMIT ind,lstIndex;
+END;$$
+
+DELIMITER ;
+-- -----------------------------------------------------
+-- procedure GetSheetsCountFromDomainFromMuseum
+-- -----------------------------------------------------
+
+USE `recolinline`;
+DROP procedure IF EXISTS `GetSheetsCountFromDomainFromMuseum`;
+
+DELIMITER $$
+USE `recolinline`$$
+CREATE PROCEDURE `GetSheetsFromMuseum`(IN idMuseumFk INT,IN idDomainFk INT)
+BEGIN
+	SELECT COUNT(*) FROM Sheet 
+	WHERE Sheet.idMuseum = idMuseumFk
+	AND Sheet.idDomain = idDomainFk;
+END;$$
+
+DELIMITER ;
 -- -----------------------------------------------------
 -- procedure GetUsers
 -- -----------------------------------------------------
@@ -479,7 +531,8 @@ DELIMITER $$
 USE `recolinline`$$
 CREATE PROCEDURE `GetUsers`(IN idMuseumFk INT)
 BEGIN	
-	SELECT MuseumUser.idMuseum, MuseumUser.idUser, MuseumUser.idRole, User.login FROM User, MuseumUser
+	SELECT MuseumUser.idMuseum, MuseumUser.idUser, MuseumUser.idRole, User.login 
+	FROM User, MuseumUser
 	WHERE  MuseumUser.idUser = User.idUser
 	AND MuseumUser.idMuseum = idMuseumFk;
 END;$$

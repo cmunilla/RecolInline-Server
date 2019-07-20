@@ -35,7 +35,7 @@ import javax.persistence.Table;
 	),
 	@NamedNativeQuery(
 	name = "SheetsCountFromDomainFromMuseum",
-	query = "CALL GetSheetsCountFromMuseum(:idMuseumFk,:idDomainFk)",
+	query = "CALL GetSheetsCountFromDomainFromMuseum(:idMuseumFk,:idDomainFk)",
 	resultClass = int.class
 	)
 })
