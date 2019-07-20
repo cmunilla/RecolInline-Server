@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 /**
  * 
  * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @version 0.3
  */
 @Entity
 public class MuseumUser implements Serializable

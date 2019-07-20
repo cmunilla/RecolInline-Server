@@ -13,7 +13,7 @@ import org.hibernate.Transaction;
  * <T> the handled entity Type 
  * 
  * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @version 0.3
  */
 @SuppressWarnings("unchecked")
 abstract class CRUDService<T> extends ReadService<T>

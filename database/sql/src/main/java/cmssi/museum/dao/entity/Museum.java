@@ -12,7 +12,7 @@ import javax.persistence.Table;
 /**
  * 
  * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @version 0.3
  */
 @Entity
 @Table(name = "Museum")

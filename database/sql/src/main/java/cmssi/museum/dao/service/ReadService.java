@@ -16,7 +16,7 @@ import org.hibernate.criterion.Restrictions;
  * <T> the handled Entity Type 
  * 
  * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @version 0.3
  */
 @SuppressWarnings("unchecked")
 abstract class ReadService<T> extends PersistenceService

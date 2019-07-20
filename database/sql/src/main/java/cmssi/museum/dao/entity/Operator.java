@@ -30,7 +30,7 @@ import javax.persistence.Table;
  *   	expression operand
  * 
  * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @version 0.3
  */
 @Entity
 @Table(name = "Operator")

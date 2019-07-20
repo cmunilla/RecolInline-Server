@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * preservation interventions, location, loan, etc).
  * 
  * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @version 0.3
  */
 @NamedNativeQueries({
 	@NamedNativeQuery(

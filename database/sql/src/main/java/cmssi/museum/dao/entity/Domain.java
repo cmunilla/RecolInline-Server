@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * have been defined, as well as an anonymous user.
  * 
  * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @version 0.3
  */
 @Entity
 @Table(name = "Domain")

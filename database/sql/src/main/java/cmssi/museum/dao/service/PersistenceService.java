@@ -8,7 +8,7 @@ import org.hibernate.cfg.AnnotationConfiguration;
  * A PersistenceService allows to interact with the persistent framework
  * 
  * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @version 0.3
  */
 abstract class PersistenceService
 {	

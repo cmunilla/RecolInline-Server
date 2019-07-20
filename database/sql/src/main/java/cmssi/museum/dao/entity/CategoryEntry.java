@@ -14,14 +14,14 @@ import javax.persistence.Table;
  * String value associated to a Category
  *   
  * @author cmunilla@cmssi.fr
- * @version 0.2
+ * @version 0.3
  */
 @Entity
 @Table(name = "CategoryEntry")
 public class CategoryEntry implements Serializable
 {
 	/**
-	 * 
+	 * Generated long ID
 	 */
 	private static final long serialVersionUID = -6839048157409306750L;
 
@@ -61,8 +61,7 @@ public class CategoryEntry implements Serializable
      * @param label the String value of the CategoryEntry to be
      * instantiated
      */
-    public CategoryEntry(Integer idCategoryEntry, Integer idCategory, String label)
-    {
+    public CategoryEntry(Integer idCategoryEntry, Integer idCategory, String label) {
         this.idCategoryEntry = idCategoryEntry;
         this.idCategory = idCategory;
         this.label = label;
@@ -73,8 +72,7 @@ public class CategoryEntry implements Serializable
 	 * 
 	 * @return this CategoryEntry's the Integer identifier 
 	 */
-	public Integer getIdCategoryEntry() 
-	{
+	public Integer getIdCategoryEntry() {
 		return idCategory;
 	}
 
@@ -84,8 +82,7 @@ public class CategoryEntry implements Serializable
 	 * @param idCategory this CategoryEntry's the Integer 
 	 * identifier 
 	 */
-	public void setIdCategoryEntry(Integer idCategoryEntry) 
-	{
+	public void setIdCategoryEntry(Integer idCategoryEntry) {
 		this.idCategoryEntry = idCategoryEntry;
 	}
 	
@@ -96,8 +93,7 @@ public class CategoryEntry implements Serializable
 	 * @return the Category's the Integer identifier for
 	 * this CategoryEntry
 	 */
-	public Integer getIdCategory() 
-	{
+	public Integer getIdCategory() {
 		return idCategory;
 	}
 
@@ -108,8 +104,7 @@ public class CategoryEntry implements Serializable
 	 * @param idCategory the Category's the Integer identifier 
 	 * for this CategoryEntry
 	 */
-	public void setIdCategory(Integer idCategory) 
-	{
+	public void setIdCategory(Integer idCategory) {
 		this.idCategory = idCategory;
 	}
 
@@ -118,8 +113,7 @@ public class CategoryEntry implements Serializable
      * 
      * @param label the String value to be set
      */
-    public void setLabel(String label)
-    {
+    public void setLabel(String label) {
     	this.label = label;
     }
     
@@ -128,8 +122,7 @@ public class CategoryEntry implements Serializable
      * 
      * @return this CategoryEntry's String value
      */
-    public String getLabel()
-    {
+    public String getLabel() {
     	return this.label;
     }
 }
