@@ -3,6 +3,7 @@ package cmssi.museum.dao.entity;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 /**
  * 
@@ -20,11 +21,13 @@ public class MuseumUser implements Serializable
 	/**
      * the User's Integer identifier
      */
+	@Id
     private Integer idUser; 
 
 	/**
      * the Museum's Integer identifier
      */
+	@Id
     private Integer idMuseum; 
 
 	/**

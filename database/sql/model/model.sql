@@ -477,9 +477,9 @@ DROP procedure IF EXISTS `GetSheetsCountFromMuseum`;
 
 DELIMITER $$
 USE `recolinline`$$
-CREATE PROCEDURE `GetSheetsFromMuseum`(IN idMuseumFk INT)
+CREATE PROCEDURE `GetSheetsCountFromMuseum`(IN idMuseumFk INT)
 BEGIN
-	SELECT COUNT(*) FROM Sheet WHERE Sheet.idMuseum = idMuseumFk;
+	SELECT COUNT(*) AS NBR FROM Sheet WHERE Sheet.idMuseum = idMuseumFk;
 END;$$
 
 DELIMITER ;
@@ -492,7 +492,7 @@ DROP procedure IF EXISTS `GetSheetsFromDomainFromMuseum`;
 
 DELIMITER $$
 USE `recolinline`$$
-CREATE PROCEDURE `GetSheetsFromMuseum`(IN idMuseumFk INT, IN idDomainFk, IN fstIndex INT, IN lstIndex INT)
+CREATE PROCEDURE `GetSheetsFromDomainFromMuseum`(IN idMuseumFk INT, IN idDomainFk INT, IN fstIndex INT, IN lstIndex INT)
 BEGIN
 	DECLARE ind INT;
 	SET ind = fstIndex -1;
@@ -512,9 +512,9 @@ DROP procedure IF EXISTS `GetSheetsCountFromDomainFromMuseum`;
 
 DELIMITER $$
 USE `recolinline`$$
-CREATE PROCEDURE `GetSheetsFromMuseum`(IN idMuseumFk INT,IN idDomainFk INT)
+CREATE PROCEDURE `GetSheetsCountFromDomainFromMuseum`(IN idMuseumFk INT,IN idDomainFk INT)
 BEGIN
-	SELECT COUNT(*) FROM Sheet 
+	SELECT COUNT(*) AS NBR FROM Sheet 
 	WHERE Sheet.idMuseum = idMuseumFk
 	AND Sheet.idDomain = idDomainFk;
 END;$$

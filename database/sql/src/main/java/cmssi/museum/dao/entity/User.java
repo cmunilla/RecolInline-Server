@@ -3,6 +3,7 @@ package cmssi.museum.dao.entity;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.ColumnResult;
 import javax.persistence.Entity;
 import javax.persistence.EntityResult;
 import javax.persistence.FieldResult;
@@ -18,14 +19,15 @@ import javax.persistence.Table;
  * @author cmunilla@cmssi.fr 
  * @version 0.3
  */
+@SuppressWarnings("unused")
 @SqlResultSetMapping(
     name="museumUser",
     entities={
-    	@EntityResult(entityClass=MuseumUser.class, fields={
-	        @FieldResult(name="idMuseum", column="MuseumUser.idMuseum"),
-	        @FieldResult(name="idUser", column="MuseumUser.idUser"),
-	        @FieldResult(name="idRole", column="MuseumUser.idRole"),
-	        @FieldResult(name="login", column="User.login")
+    	@EntityResult(entityClass = MuseumUser.class, fields={
+	        @FieldResult(name="idMuseum", column="idMuseum"),
+	        @FieldResult(name="idUser", column="idUser"),
+	        @FieldResult(name="idRole", column="idRole"),
+	        @FieldResult(name="login", column="login")
 	        }
     	)
     }

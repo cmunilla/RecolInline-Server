@@ -3,11 +3,13 @@ package cmssi.museum.dao.entity;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.ColumnResult;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
  
 /**
@@ -17,6 +19,10 @@ import javax.persistence.Table;
  * @author cmunilla@cmssi.fr 
  * @version 0.3
  */
+@SqlResultSetMapping(
+   name = "integerCounterMapping", 
+   columns = { @ColumnResult(name = "NBR") }
+)
 @NamedNativeQueries({
 	@NamedNativeQuery(
 	name = "SheetsFromMuseum",
@@ -30,13 +36,13 @@ import javax.persistence.Table;
 	),
 	@NamedNativeQuery(
 	name = "SheetsCountFromMuseum",
-	query = "CALL GetSheetsCountFromMuseum(:idMuseumFk)",
-	resultClass = int.class
+	query = "CALL GetSheetsCountFromMuseum(:idMuseumFk)",	
+	resultSetMapping = "integerCounterMapping"
 	),
 	@NamedNativeQuery(
 	name = "SheetsCountFromDomainFromMuseum",
-	query = "CALL GetSheetsCountFromDomainFromMuseum(:idMuseumFk,:idDomainFk)",
-	resultClass = int.class
+	query = "CALL GetSheetsCountFromDomainFromMuseum(:idMuseumFk,:idDomainFk)",	
+	resultSetMapping = "integerCounterMapping"
 	)
 })
 @Entity
