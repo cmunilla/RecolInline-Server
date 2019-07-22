@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 
 import cmssi.museum.dao.entity.Domain;
+import cmssi.museum.dao.service.DomainService;
 
 public class Main {
  
@@ -23,6 +24,17 @@ public class Main {
          
         session.save(domain);
         session.getTransaction().commit();
+        
+        DomainService ds = new DomainService();
+
+        Domain d = new Domain();
+        d.setRefDomain(new Integer(1));
+        d.setLabel("TESTDOMAIN2");
+        ds.add(d);
+        System.out.println(d.getIdDomain());
+        
+        ds.remove(domain);
+        ds.remove(d);
          
         session.close(); 
     }

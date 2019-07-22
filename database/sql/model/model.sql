@@ -520,6 +520,22 @@ BEGIN
 END;$$
 
 DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure GetSheet
+-- -----------------------------------------------------
+
+USE `recolinline`;
+DROP procedure IF EXISTS `GetSheet`;
+
+DELIMITER $$
+USE `recolinline`$$
+CREATE PROCEDURE `GetSheet`(IN idSheetPk INT)
+BEGIN
+	SELECT COUNT(*) AS NBR FROM Sheet WHERE Sheet.idMuseum = idMuseumFk AND Sheet.idDomain = idDomainFk;
+END;$$
+
+DELIMITER ;
 -- -----------------------------------------------------
 -- procedure GetUsers
 -- -----------------------------------------------------

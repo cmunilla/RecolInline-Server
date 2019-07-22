@@ -22,7 +22,7 @@ import org.hibernate.criterion.Restrictions;
 abstract class ReadService<T> extends PersistenceService
 {	
 	private Class<T> entityType;
-	private String identityFieldName;
+	private String identityColumnName;
 	
 	/**
 	 * Constructor
@@ -32,16 +32,16 @@ abstract class ReadService<T> extends PersistenceService
 		
 		Field[] fields = this.entityType.getDeclaredFields();
 		for(Field field : fields) {
-			field.setAccessible(true);
+			//field.setAccessible(true);
 			Id idAnnotation = field.getAnnotation(Id.class);
 			if(idAnnotation != null) {
 				Column column = field.getAnnotation(Column.class);
 				String columnName = column!= null?column.name():null;
-				this.identityFieldName = columnName==null?field.getName():columnName;
+				this.identityColumnName = columnName==null?field.getName():columnName;
 				break;
 			}
 		}
-		if(this.identityFieldName == null) {
+		if(this.identityColumnName == null) {
 			throw new NullPointerException("No @Id annotated field found");
 		}
 	}
@@ -50,9 +50,9 @@ abstract class ReadService<T> extends PersistenceService
 		return this.entityType;
 	}
 
-
+	
 	protected String getIdentityFieldName() {
-		return this.identityFieldName;
+		return this.identityColumnName;
 	}
 	
 	public List<T> getAll() {
