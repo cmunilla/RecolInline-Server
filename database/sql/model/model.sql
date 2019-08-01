@@ -434,19 +434,14 @@ DROP procedure IF EXISTS `GetModels`;
 
 DELIMITER $$
 USE `recolinline`$$
-CREATE PROCEDURE `GetModels`(IN idDomainFk INT)
+CREATE PROCEDURE `GetModels`(IN idDomainFk INT, IN first BOOLEAN)
 BEGIN
 	DECLARE parentDomain INT;
-	SET @@SESSION.max_sp_recursion_depth = 255;
+	IF first THEN SET @@SESSION.max_sp_recursion_depth = 255; END IF;	
+	CREATE TEMPORARY TABLE IF NOT EXISTS Models ( idModel INT, idDomain INT, label VARCHAR(256));	
     SELECT refDomain INTO parentDomain FROM Domain WHERE Domain.idDomain = idDomainFk;
-    IF parentDomain IS NULL
-    THEN
-		SELECT idModel, idDomain, label FROM Model WHERE Model.idDomain = idDomainFk;
-	ELSE
-        SELECT GetModels (parentDomain)
-        UNION ALL
-        SELECT idModel, idDomain, label FROM Model WHERE Model.idDomain = idDomainFk;
-	END IF;
+    IF parentDomain IS NOT NULL THEN CALL GetModels (parentDomain, FALSE); END IF;
+	INSERT INTO Models SELECT idModel, idDomain, label FROM Model WHERE Model.idDomain = idDomainFk;
 END;$$
 
 DELIMITER ;
@@ -526,13 +521,44 @@ DELIMITER ;
 -- -----------------------------------------------------
 
 USE `recolinline`;
-DROP procedure IF EXISTS `GetSheet`;
+DROP procedure IF EXISTS `GetSheetInstance`;
 
 DELIMITER $$
 USE `recolinline`$$
-CREATE PROCEDURE `GetSheet`(IN idSheetPk INT)
+CREATE PROCEDURE `GetSheetInstance`(IN idSheetPk INT)
 BEGIN
-	SELECT COUNT(*) AS NBR FROM Sheet WHERE Sheet.idMuseum = idMuseumFk AND Sheet.idDomain = idDomainFk;
+	DECLARE idDomainFk INT;
+	DECLARE idm INT;
+	DECLARE idd INT;
+	DECLARE lm VARCHAR(256);
+	DECLARE done BOOLEAN DEFAULT FALSE;
+	
+	CREATE TEMPORARY TABLE IF NOT EXISTS sheetInstance ( 
+		idLine INT, 
+		idDomain INT,
+		idField INT,
+		libelleField VARCHAR(256),
+		idModel INT, 
+		libelleModel VARCHAR(256), 
+		libelleLine VARCHAR(256));
+	
+	SELECT idDomain INTO idDomainFk FROM Sheet WHERE Sheet.idSheet = idSheetPk;
+	CALL GetModels(idDomainFk, TRUE);	
+	DECLARE cur CURSOR FOR SELECT * FROM Models;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;	
+	OPEN cur;
+	read_loop: LOOP
+	FETCH cur INTO idm ,idd ,lm;
+		INSERT INTO sheetInstance 
+		SELECT Line.idLine, idDomainFk, Field.idField, Field.label, idm, lm, Line.line
+		FROM Field, Line
+		WHERE Line.idField = Field.idField 
+		AND Line.idSheet = idSheetPk 
+		AND Field.idModel = idm
+		ORDER BY Line.idLine;
+	END LOOP;
+	CLOSE cur;
+	SELECT * FROM sheetInstance;
 END;$$
 
 DELIMITER ;
