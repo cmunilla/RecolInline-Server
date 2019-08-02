@@ -438,10 +438,10 @@ CREATE PROCEDURE `GetModels`(IN idDomainFk INT, IN first BOOLEAN)
 BEGIN
 	DECLARE parentDomain INT;
 	IF first THEN SET @@SESSION.max_sp_recursion_depth = 255; END IF;	
-	CREATE TEMPORARY TABLE IF NOT EXISTS Models ( idModel INT, idDomain INT, label VARCHAR(256));	
+	CREATE TEMPORARY TABLE IF NOT EXISTS Models ( idModel INT, label VARCHAR(256));	
     SELECT refDomain INTO parentDomain FROM Domain WHERE Domain.idDomain = idDomainFk;
     IF parentDomain IS NOT NULL THEN CALL GetModels (parentDomain, FALSE); END IF;
-	INSERT INTO Models SELECT idModel, idDomain, label FROM Model WHERE Model.idDomain = idDomainFk;
+	INSERT INTO Models SELECT idModel, label FROM Model WHERE Model.idDomain = idDomainFk;
 END;$$
 
 DELIMITER ;
@@ -532,6 +532,11 @@ BEGIN
 	DECLARE idd INT;
 	DECLARE lm VARCHAR(256);
 	DECLARE done BOOLEAN DEFAULT FALSE;
+	DECLARE cur CURSOR FOR SELECT * FROM Models;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;	
+		
+	SELECT idDomain INTO idDomainFk FROM Sheet WHERE Sheet.idSheet = idSheetPk;
+	CALL GetModels(idDomainFk, TRUE);	
 	
 	CREATE TEMPORARY TABLE IF NOT EXISTS sheetInstance ( 
 		idLine INT, 
@@ -541,24 +546,20 @@ BEGIN
 		idModel INT, 
 		libelleModel VARCHAR(256), 
 		libelleLine VARCHAR(256));
-	
-	SELECT idDomain INTO idDomainFk FROM Sheet WHERE Sheet.idSheet = idSheetPk;
-	CALL GetModels(idDomainFk, TRUE);	
-	DECLARE cur CURSOR FOR SELECT * FROM Models;
-	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;	
+		
 	OPEN cur;
 	read_loop: LOOP
-	FETCH cur INTO idm ,idd ,lm;
+		FETCH cur INTO idm ,lm;
+		IF done THEN LEAVE read_loop; END IF;
 		INSERT INTO sheetInstance 
 		SELECT Line.idLine, idDomainFk, Field.idField, Field.label, idm, lm, Line.line
-		FROM Field, Line
-		WHERE Line.idField = Field.idField 
-		AND Line.idSheet = idSheetPk 
-		AND Field.idModel = idm
+		FROM Field, Line WHERE Line.idField = Field.idField AND Line.idSheet = idSheetPk AND Field.idModel = idm
 		ORDER BY Line.idLine;
 	END LOOP;
 	CLOSE cur;
 	SELECT * FROM sheetInstance;
+	DROP TEMPORARY TABLE IF EXISTS Models;	
+	DROP TEMPORARY TABLE IF EXISTS sheetInstance;	
 END;$$
 
 DELIMITER ;
