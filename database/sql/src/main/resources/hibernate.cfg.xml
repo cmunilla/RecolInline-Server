@@ -17,6 +17,7 @@
         <mapping class="cmssi.museum.dao.entity.Domain"/>    
         <mapping class="cmssi.museum.dao.entity.Field"/>   
         <mapping class="cmssi.museum.dao.entity.Line"/>    
+        <mapping class="cmssi.museum.dao.entity.LineInstance"/>     
         <mapping class="cmssi.museum.dao.entity.Model"/>    
         <mapping class="cmssi.museum.dao.entity.Museum"/>   
         <mapping class="cmssi.museum.dao.entity.MuseumUser"/>     

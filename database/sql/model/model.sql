@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `Museum` ;
 
 CREATE TABLE IF NOT EXISTS `Museum` (
   `idMuseum` INT NOT NULL AUTO_INCREMENT,
-  `label` VARCHAR(256) NOT NULL,
+  `label` VARCHAR(1024) NOT NULL,
   `column` INT NOT NULL,
   PRIMARY KEY (`idMuseum`))
   
@@ -36,10 +36,9 @@ DROP TABLE IF EXISTS `Contact` ;
 
 CREATE TABLE IF NOT EXISTS `Contact` (
   `idContact` INT NOT NULL AUTO_INCREMENT,
-  `label` VARCHAR(256) NOT NULL,
-  `address` VARCHAR(256) NOT NULL,
-  `email` VARCHAR(256) NOT NULL,
-  `phone` VARCHAR(256) NOT NULL,
+  `label` VARCHAR(1024) NOT NULL,
+  `address` VARCHAR(2048) NOT NULL,
+  `email` VARCHAR(1024) NOT NULL,
   PRIMARY KEY (`idContact`))
     
 ENGINE = InnoDB;
@@ -52,7 +51,7 @@ DROP TABLE IF EXISTS `Domain` ;
 CREATE TABLE IF NOT EXISTS `Domain` (
   `idDomain` INT NOT NULL AUTO_INCREMENT,
   `refDomain` INT NULL DEFAULT 1,
-  `label` VARCHAR(256) NOT NULL,
+  `label` VARCHAR(1024) NOT NULL,
   PRIMARY KEY (`idDomain`),
   CONSTRAINT `refDomain_lk`
     FOREIGN KEY (`refDomain`)
@@ -72,7 +71,7 @@ DROP TABLE IF EXISTS `Model` ;
 CREATE TABLE IF NOT EXISTS `Model` (
   `idModel` INT NOT NULL AUTO_INCREMENT,
   `idDomain` INT NOT NULL,
-  `label` VARCHAR(256) NOT NULL,
+  `label` VARCHAR(1024) NOT NULL,
   PRIMARY KEY (`idModel`),
   CONSTRAINT `domain_idDomain_fk`
     FOREIGN KEY (`idDomain`)
@@ -91,6 +90,7 @@ DROP TABLE IF EXISTS `Type` ;
 CREATE TABLE IF NOT EXISTS `Type` (
   `idType` INT NOT NULL AUTO_INCREMENT,
   `idDomain` INT NOT NULL,
+  `isText` BOOLEAN NOT NULL,
   `label` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idType`),
   CONSTRAINT `type_idDomain_fk`
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `Field` (
   `idField` INT NOT NULL AUTO_INCREMENT,
   `idModel` INT NOT NULL,
   `idType` INT NOT NULL,
-  `label` VARCHAR(256) NOT NULL,
+  `label` VARCHAR(1024) NOT NULL,
   PRIMARY KEY (`idField`),
   CONSTRAINT `field_idModel_fk`
     FOREIGN KEY (`idModel`)
@@ -190,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `Sheet` (
   `idSheet` INT NOT NULL AUTO_INCREMENT,
   `idMuseum` INT NOT NULL,
   `idDomain` INT NOT NULL,
-  `label` VARCHAR(256) NOT NULL,
+  `label` VARCHAR(1024) NOT NULL,
   PRIMARY KEY (`idSheet`),
   CONSTRAINT `sheet_idDomain_fk`
     FOREIGN KEY (`idDomain`)
@@ -213,11 +213,10 @@ CREATE INDEX `sheet_idMuseum_fk_idx` ON `Sheet` (`idMuseum` ASC);
 DROP TABLE IF EXISTS `Line` ;
 
 CREATE TABLE IF NOT EXISTS `Line` (
-  `idLine` INT NOT NULL AUTO_INCREMENT,
   `idField` INT NOT NULL,
   `idSheet` INT NOT NULL,
-  `line` VARCHAR(256) NULL,
-  PRIMARY KEY (`idLine`),
+  `line` VARCHAR(32000) NULL,
+   PRIMARY KEY (`idField`, `idSheet`),
   CONSTRAINT `line_idField_fk`
     FOREIGN KEY (`idField`)
     REFERENCES `Field` (`idField`)
@@ -253,7 +252,7 @@ CREATE TABLE IF NOT EXISTS `Constraint` (
   `idConstraint` INT NOT NULL AUTO_INCREMENT,
   `idField` INT NOT NULL,
   `idOperator` INT NOT NULL,
-  `operand` VARCHAR(256) NULL,
+  `operand` VARCHAR(1024) NULL,
   PRIMARY KEY (`idConstraint`),
   CONSTRAINT `constraint_idField_fk`
     FOREIGN KEY (`idField`)
@@ -276,8 +275,8 @@ DROP TABLE IF EXISTS `User` ;
 
 CREATE TABLE IF NOT EXISTS `User` (
   `idUser` INT NOT NULL AUTO_INCREMENT,
-  `login` VARCHAR(256) NULL,
-  `password` VARCHAR(256) NULL,
+  `login` VARCHAR(1024) NULL,
+  `password` VARCHAR(1024) NULL,
   PRIMARY KEY (`idUser`))
 ENGINE = InnoDB;
 
@@ -369,7 +368,7 @@ DROP TABLE IF EXISTS `Category` ;
 CREATE TABLE IF NOT EXISTS `Category` (
   `idCategory` INT NOT NULL AUTO_INCREMENT,
   `idType` INT NOT NULL,
-  `label` VARCHAR(256) NOT NULL,
+  `label` VARCHAR(1024) NOT NULL,
   `cardinality` INT NOT NULL DEFAULT -1,
   PRIMARY KEY (`idCategory`),
   CONSTRAINT `category_idType_fk`
@@ -389,7 +388,7 @@ DROP TABLE IF EXISTS `CategoryEntry` ;
 CREATE TABLE IF NOT EXISTS `CategoryEntry` (
   `idCategoryEntry` INT NOT NULL AUTO_INCREMENT,
   `idCategory` INT NOT NULL,
-  `label` VARCHAR(256) NOT NULL,
+  `label` VARCHAR(1024) NOT NULL,
   PRIMARY KEY (`idCategoryEntry`),
   CONSTRAINT `categoryEntry_idCategory_fk`
     FOREIGN KEY (`idCategory`)
@@ -409,16 +408,16 @@ DROP procedure IF EXISTS `GetTypes`;
 
 DELIMITER $$
 USE `recolinline`$$
-CREATE PROCEDURE `GetTypes`(IN idDomainFk INT)
+CREATE PROCEDURE `GetTypes`(IN idDomainFk INT, IN first BOOLEAN)
 BEGIN
 	DECLARE parentDomain INT;
-	SET @@SESSION.max_sp_recursion_depth = 255;
+	IF first THEN SET @@SESSION.max_sp_recursion_depth = 255; END IF;	
     SELECT refDomain INTO parentDomain FROM Domain WHERE Domain.idDomain = idDomainFk;
     IF parentDomain IS NULL
     THEN
 		SELECT idType, idDomain, label FROM Type WHERE Type.idDomain = idDomainFk;
 	ELSE
-        SELECT GetTypes (parentDomain)
+        SELECT GetTypes (parentDomain,FALSE);
         UNION ALL
         SELECT idType, idDomain, label FROM Type WHERE Type.idDomain = idDomainFk;
 	END IF;
@@ -438,7 +437,7 @@ CREATE PROCEDURE `GetModels`(IN idDomainFk INT, IN first BOOLEAN)
 BEGIN
 	DECLARE parentDomain INT;
 	IF first THEN SET @@SESSION.max_sp_recursion_depth = 255; END IF;	
-	CREATE TEMPORARY TABLE IF NOT EXISTS Models ( idModel INT, label VARCHAR(256));	
+	CREATE TEMPORARY TABLE IF NOT EXISTS Models ( idModel INT, label VARCHAR(1024));	
     SELECT refDomain INTO parentDomain FROM Domain WHERE Domain.idDomain = idDomainFk;
     IF parentDomain IS NOT NULL THEN CALL GetModels (parentDomain, FALSE); END IF;
 	INSERT INTO Models SELECT idModel, label FROM Model WHERE Model.idDomain = idDomainFk;
@@ -521,42 +520,69 @@ DELIMITER ;
 -- -----------------------------------------------------
 
 USE `recolinline`;
-DROP procedure IF EXISTS `GetSheetInstance`;
+DROP procedure IF EXISTS `GetSheetLines`;
 
 DELIMITER $$
 USE `recolinline`$$
-CREATE PROCEDURE `GetSheetInstance`(IN idSheetPk INT)
+CREATE PROCEDURE `GetSheetLines`(IN idSheetPk INT, IN idUserFk INT)
 BEGIN
 	DECLARE idDomainFk INT;
-	DECLARE idm INT;
-	DECLARE idd INT;
-	DECLARE lm VARCHAR(256);
+	DECLARE idModelFk INT;
+	DECLARE idMuseumFk INT;
+	DECLARE idRoleFk INT;
+	DECLARE idVisibilityFk INT;
+	DECLARE labelVisibility VARCHAR(1024);
+	DECLARE labelModel VARCHAR(1024);
 	DECLARE done BOOLEAN DEFAULT FALSE;
+	
 	DECLARE cur CURSOR FOR SELECT * FROM Models;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;	
 		
-	SELECT idDomain INTO idDomainFk FROM Sheet WHERE Sheet.idSheet = idSheetPk;
+	SELECT idDomain, idMuseum INTO idDomainFk, idMuseumFk FROM Sheet 
+	WHERE Sheet.idSheet = idSheetPk;
+	
+	SELECT idRole INTO idRoleFk FROM MusuemUser 
+	WHERE MusuemUser.idMuseum = idMuseumFk AND MuseumUser.idUser = idUserFk;
+		
 	CALL GetModels(idDomainFk, TRUE);	
 	
-	CREATE TEMPORARY TABLE IF NOT EXISTS sheetInstance ( 
-		idLine INT, 
-		idDomain INT,
-		idField INT,
-		libelleField VARCHAR(256),
+	CREATE TEMPORARY TABLE IF NOT EXISTS sheetInstance (
+		idSheet INT, 
 		idModel INT, 
-		libelleModel VARCHAR(256), 
-		libelleLine VARCHAR(256));
+		idField INT,
+		idType INT,
+		idVisibility INT,
+		labelModel VARCHAR(1024), 
+		labelField VARCHAR(1024),
+		labelType VARCHAR(1024),
+		labelVisibility VARCHAR(1024),
+		constraints VARCHAR(25000),
+		isText BOOLEAN,
+		line VARCHAR(25000));
 		
 	OPEN cur;
 	read_loop: LOOP
-		FETCH cur INTO idm ,lm;
+		FETCH cur INTO idModelFk ,labelModel;
 		IF done THEN LEAVE read_loop; END IF;
-		INSERT INTO sheetInstance 
-		SELECT Line.idLine, idDomainFk, Field.idField, Field.label, idm, lm, Line.line
-		FROM Field, Line WHERE Line.idField = Field.idField AND Line.idSheet = idSheetPk AND Field.idModel = idm
-		ORDER BY Line.idLine;
+		
+		INSERT INTO sheetInstance
+		SELECT idSheetPk, idModelFk, Line.idField, Field.idType, Visibility.idVisibility, labelModel, 
+		Field.label, Type.label, Visibility.label, CONCAT('[',GROUP_CONCAT(CONCAT('{','"operator":"',
+		Operator.label,'",','"operand":"', Constraint.operand,'"','}')),']'), Type.isText, Line.line 
+		FROM Field, Type, Line, FieldVisibility, Visibility, Constraint, Operator 
+		WHERE Line.idField = Field.idField 
+		AND FieldVisibility.idField = Field.idField 
+		AND FieldVisibility.idRole = idRoleFk
+		AND FieldVisibility.idVisibility = Visibility.idVisibility
+		AND Line.idSheet = idSheetPk 
+		AND Field.idType = Type.idType 
+		AND Field.idModel = idModelFk
+		AND Constraint.idField = Field.idField
+		AND Constraint.idOperator = Operator.idOperator
+		GROUP BY Constraint.idField
 	END LOOP;
 	CLOSE cur;
+
 	SELECT * FROM sheetInstance;
 	DROP TEMPORARY TABLE IF EXISTS Models;	
 	DROP TEMPORARY TABLE IF EXISTS sheetInstance;	

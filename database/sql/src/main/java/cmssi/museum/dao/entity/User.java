@@ -3,7 +3,6 @@ package cmssi.museum.dao.entity;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.ColumnResult;
 import javax.persistence.Entity;
 import javax.persistence.EntityResult;
 import javax.persistence.FieldResult;
@@ -19,7 +18,6 @@ import javax.persistence.Table;
  * @author cmunilla@cmssi.fr 
  * @version 0.3
  */
-@SuppressWarnings("unused")
 @SqlResultSetMapping(
     name="museumUser",
     entities={

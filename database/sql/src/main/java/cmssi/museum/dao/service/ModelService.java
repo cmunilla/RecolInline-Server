@@ -33,8 +33,7 @@ public class ModelService extends CRUDService<Model> {
 	 * 
 	 * @return the List of {@link Model}s for the specified {@link Domain}
 	 */
-	public List<Model> getModels(Integer idDomain)
-	{
+	public List<Model> getModels(Integer idDomain){
 		Query query = getSession().getNamedQuery("ModelsFromDomain");
 		query.setParameter("idDomainFk", idDomain);
 		return (List<Model>) query.list();

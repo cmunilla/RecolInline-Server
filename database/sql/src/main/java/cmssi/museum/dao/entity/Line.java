@@ -4,10 +4,13 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
+import javax.persistence.FieldResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
 /**
@@ -18,13 +21,35 @@ import javax.persistence.Table;
  * @author cmunilla@cmssi.fr
  * @version 0.3
  */
-@NamedNativeQueries({
+@SqlResultSetMapping(
+    name="lineInstance",
+    entities={
+    	@EntityResult(
+    	    entityClass = LineInstance.class, 
+    	    fields={
+		        @FieldResult(name="idSheet", column="idSheet"),
+		        @FieldResult(name="idModel", column="idModel"),
+		        @FieldResult(name="idField", column="idField"),
+		        @FieldResult(name="idType", column="idType"),
+		        @FieldResult(name="idVisibility", column="idVisibility"),
+		        @FieldResult(name="labelModel", column="labelModel"),
+		        @FieldResult(name="labelField", column="labelField"),
+		        @FieldResult(name="labelType", column="labelType"),
+		        @FieldResult(name="labelVisibility", column="labelVisibility"),
+		        @FieldResult(name="constraints", column="constraints"),
+		        @FieldResult(name="isText", column="isText"),
+		        @FieldResult(name="line", column="line")
+	        }
+    	)
+    }
+)
+@NamedNativeQueries(
 	@NamedNativeQuery(
-	name = "LinesFromField",
-	query = "CALL GetLines(:idFieldFk)",
-	resultClass = Line.class
+		name = "sheetLines",
+		query = "CALL GetSheetLines(:idSheetPk)",
+		resultSetMapping="lineInstance"
 	)
-})
+)
 @Entity
 @Table(name = "Line")
 public class Line implements Serializable
@@ -79,8 +104,7 @@ public class Line implements Serializable
      * @param line the String value of the Line to be 
      * instantiated
      */
-    public Line(Integer idLine, Integer idField, Integer idSheet, String line)
-    {
+    public Line(Integer idLine, Integer idField, Integer idSheet, String line){
     	this.idLine = idLine;
     	this.idField = idField;
     	this.idSheet = idSheet;
