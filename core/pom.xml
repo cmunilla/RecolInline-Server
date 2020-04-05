@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>cmssi.museum</groupId>
+    <artifactId>recolinline</artifactId>
+    <version>0.3</version>
+  </parent>
+  
+  <groupId>cmssi.museum.recolinline</groupId>
+  <artifactId>core</artifactId>
+
+  <packaging>pom</packaging>
+  
+  <name>Museum Inventory - RecolInline platform core parent</name>
+  
+  <modules>
+  	<module>controler-api</module>        
+	<module>controler</module>
+ 	<!--	
+	<module>security-api</module> 
+	<module>security</module>
+ 	--> 
+   </modules>
+  
+</project>
