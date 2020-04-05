@@ -1,54 +1,31 @@
+/* 
+ * Copyright 2019-2020 Christophe Vincent Munilla, FR Micro Entreprise - All Rights Reserved
+ * 
+ * RecolInline Tools Suite
+ * @contact cmunilla@cmssi.fr
+ */
 package cmssi.museum.dao.entity;
 
 import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityResult;
-import javax.persistence.FieldResult;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
-import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
 /**
- * In the data model a Line represents all or a part (depending 
- * whether the Field and Sheet keys couple is unique in the table 
- * or not) of the content of a Field for a specific Sheet.
+ * In the data model a Line represents the content of a {@link Field} 
+ * for a specific {@link Sheet}.
  * 
  * @author cmunilla@cmssi.fr
  * @version 0.3
  */
-@SqlResultSetMapping(
-    name="lineInstance",
-    entities={
-    	@EntityResult(
-    	    entityClass = LineInstance.class, 
-    	    fields={
-		        @FieldResult(name="idSheet", column="idSheet"),
-		        @FieldResult(name="idModel", column="idModel"),
-		        @FieldResult(name="idField", column="idField"),
-		        @FieldResult(name="idType", column="idType"),
-		        @FieldResult(name="idVisibility", column="idVisibility"),
-		        @FieldResult(name="labelModel", column="labelModel"),
-		        @FieldResult(name="labelField", column="labelField"),
-		        @FieldResult(name="labelType", column="labelType"),
-		        @FieldResult(name="labelVisibility", column="labelVisibility"),
-		        @FieldResult(name="constraints", column="constraints"),
-		        @FieldResult(name="isText", column="isText"),
-		        @FieldResult(name="line", column="line")
-	        }
-    	)
-    }
-)
-@NamedNativeQueries(
-	@NamedNativeQuery(
-		name = "sheetLines",
-		query = "CALL GetSheetLines(:idSheetPk)",
-		resultSetMapping="lineInstance"
-	)
+
+@NamedNativeQuery(
+	name = "SheetLines",
+	query = "CALL GetSheetsLines(:idSheetFk)",
+	resultClass = Line.class
 )
 @Entity
 @Table(name = "Line")
@@ -60,17 +37,10 @@ public class Line implements Serializable
 	private static final long serialVersionUID = 2768107901772252081L;
 
 	/**
-     * the Line's Integer identifier
-     */
-    @Id
-    @GeneratedValue
-    @Column
-    private Integer idLine; 
-
-	/**
      * the Integer identifier of the Field
      * this Line belongs to
      */
+    @Id
     @Column
     private Integer idField; 
 
@@ -78,6 +48,7 @@ public class Line implements Serializable
      * the Integer identifier of the Sheet this Line
      * belongs to
      */
+    @Id
     @Column
     private Integer idSheet; 
 
@@ -95,8 +66,6 @@ public class Line implements Serializable
     /**
      * Constructor
      * 
-     * @param idLine the Integer identifier of the Line to
-     * be instantiated
      * @param idField the Integer identifier of the Field the
      * Line to be instantiated belongs to
      * @param idSheet the Integer identifier of the Sheet the
@@ -104,26 +73,11 @@ public class Line implements Serializable
      * @param line the String value of the Line to be 
      * instantiated
      */
-    public Line(Integer idLine, Integer idField, Integer idSheet, String line){
-    	this.idLine = idLine;
+    public Line(Integer idField, Integer idSheet, String line) {
     	this.idField = idField;
     	this.idSheet = idSheet;
     	this.line = line;
     }
-
-	/**
-	 * @return the idLine
-	 */
-	public Integer getIdLine() {
-		return idLine;
-	}
-
-	/**
-	 * @param idLine the idLine to set
-	 */
-	public void setIdLine(Integer idLine) {
-		this.idLine = idLine;
-	}
 
 	/**
 	 * @return the idField

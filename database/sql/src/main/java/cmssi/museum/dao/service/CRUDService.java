@@ -27,6 +27,8 @@ abstract class CRUDService<T> extends ReadService<T>
 	
 	/**
 	 * Constructor
+	 * 
+	 * @param entityType the handled &lt;T&gt; entity Type
 	 */
 	public CRUDService(Class<T> entityType){
 		super(entityType);
@@ -43,6 +45,12 @@ abstract class CRUDService<T> extends ReadService<T>
 		}
 	}
 
+	/**
+	 * Returns the String name of the method allowing to define the
+	 * identifier of the handled &lt;T&gt; entity Type 
+	 * 
+	 * @return the &lt;T&gt; entity Type identity setter method's name
+	 */
 	protected String getIdentityFieldSetterName() {
 		return this.identityFieldSetterName;
 	}

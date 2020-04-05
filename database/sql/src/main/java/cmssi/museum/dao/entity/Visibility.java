@@ -1,3 +1,9 @@
+/* 
+ * Copyright 2019-2020 Christophe Vincent Munilla, FR Micro Entreprise - All Rights Reserved
+ * 
+ * RecolInline Tools Suite
+ * @contact cmunilla@cmssi.fr
+ */
 package cmssi.museum.dao.entity;
  
 import java.io.Serializable;
@@ -21,6 +27,10 @@ import javax.persistence.Table;
 @Table(name = "Visibility")
 public class Visibility implements Serializable
 {
+	public static final String HIDDEN   = "HIDDEN";
+	public static final String DISABLED = "DISABLED";
+	public static final String ENABLED  = "ENABLED";
+	
 	/**
 	 * Generated longID
 	 */

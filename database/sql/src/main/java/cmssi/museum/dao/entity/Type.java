@@ -1,3 +1,9 @@
+/* 
+ * Copyright 2019-2020 Christophe Vincent Munilla, FR Micro Entreprise - All Rights Reserved
+ * 
+ * RecolInline Tools Suite
+ * @contact cmunilla@cmssi.fr
+ */
 package cmssi.museum.dao.entity;
  
 import java.io.Serializable;
@@ -31,7 +37,7 @@ import javax.persistence.Table;
 public class Type implements Serializable
 {
 	/**
-	 * 
+	 * Generated serial identifier
 	 */
 	private static final long serialVersionUID = -3777228058711740000L;
 
@@ -44,8 +50,7 @@ public class Type implements Serializable
     private Integer idType; 
     
     /**
-     * the Integer identifier of the 
-     * Domain this Type belongs to
+     * the Integer identifier of the Domain this Type belongs to
      */
     @Column
     private Integer idDomain; 

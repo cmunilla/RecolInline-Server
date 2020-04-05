@@ -1,3 +1,9 @@
+/* 
+ * Copyright 2019-2020 Christophe Vincent Munilla, FR Micro Entreprise - All Rights Reserved
+ * 
+ * RecolInline Tools Suite
+ * @contact cmunilla@cmssi.fr
+ */
 package cmssi.museum.dao.entity;
  
 import java.io.Serializable;
@@ -5,11 +11,14 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.ColumnResult;
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
+import javax.persistence.FieldResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.SqlResultSetMapping;
+import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
  
 /**
@@ -19,30 +28,58 @@ import javax.persistence.Table;
  * @author cmunilla@cmssi.fr 
  * @version 0.3
  */
-@SqlResultSetMapping(
-   name = "integerCounterMapping", 
-   columns = { @ColumnResult(name = "NBR") }
-)
+
+@SqlResultSetMappings({
+	@SqlResultSetMapping(
+        name = "integerCounterMapping", 
+        columns = { @ColumnResult(name = "NBR") }
+    ),
+	@SqlResultSetMapping(
+	    name="fieldSkeleton",
+	    entities={
+	    	@EntityResult(
+	    	    entityClass = FieldSkeleton.class, 
+	    	    fields={
+			        @FieldResult(name="idModel", column="idModel"),
+			        @FieldResult(name="idField", column="idField"),
+			        @FieldResult(name="idType", column="idType"),
+			        @FieldResult(name="idVisibility", column="idVisibility"),
+			        @FieldResult(name="labelModel", column="labelModel"),
+			        @FieldResult(name="labelField", column="labelField"),
+			        @FieldResult(name="labelType", column="labelType"),
+			        @FieldResult(name="labelVisibility", column="labelVisibility"),
+			        @FieldResult(name="constraints", column="constraints"),
+			        @FieldResult(name="isText", column="isText")
+		        }
+	    	)
+	    }
+	)
+})
 @NamedNativeQueries({
 	@NamedNativeQuery(
-	name = "SheetsFromMuseum",
-	query = "CALL GetSheetsFromMuseum(:idMuseumFk,:fstIndex,:lstIndex)",
-	resultClass = Sheet.class
+		name = "SheetFields",
+		query = "CALL GetSheetFields(:idMuseumFk,:idDomainFk,:idUserFk)",
+		resultSetMapping="fieldSkeleton"
 	),
 	@NamedNativeQuery(
-	name = "SheetsFromDomainFromMuseum",
-	query = "CALL GetSheetsFromDomainFromMuseum(:idMuseumFk,:idDomainFk,:fstIndex,:lstIndex)",
-	resultClass = Sheet.class
+		name = "SheetsFromMuseum",
+		query = "CALL GetSheetsFromMuseum(:idMuseumFk,:fstIndex,:lstIndex)",
+		resultClass = Sheet.class
 	),
 	@NamedNativeQuery(
-	name = "SheetsCountFromMuseum",
-	query = "CALL GetSheetsCountFromMuseum(:idMuseumFk)",	
-	resultSetMapping = "integerCounterMapping"
+		name = "SheetsFromDomainFromMuseum",
+		query = "CALL GetSheetsFromDomainFromMuseum(:idMuseumFk,:idDomainFk,:fstIndex,:lstIndex)",
+		resultClass = Sheet.class
 	),
 	@NamedNativeQuery(
-	name = "SheetsCountFromDomainFromMuseum",
-	query = "CALL GetSheetsCountFromDomainFromMuseum(:idMuseumFk,:idDomainFk)",	
-	resultSetMapping = "integerCounterMapping"
+		name = "SheetsCountFromMuseum",
+		query = "CALL GetSheetsCountFromMuseum(:idMuseumFk)",	
+		resultSetMapping = "integerCounterMapping"
+	),
+	@NamedNativeQuery(
+		name = "SheetsCountFromDomainFromMuseum",
+		query = "CALL GetSheetsCountFromDomainFromMuseum(:idMuseumFk,:idDomainFk)",	
+		resultSetMapping = "integerCounterMapping"
 	)
 })
 @Entity

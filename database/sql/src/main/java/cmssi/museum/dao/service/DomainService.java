@@ -19,5 +19,5 @@ public class DomainService extends CRUDService<Domain> {
 	public DomainService(){
 		super(Domain.class);
 	}
-	
+
 }

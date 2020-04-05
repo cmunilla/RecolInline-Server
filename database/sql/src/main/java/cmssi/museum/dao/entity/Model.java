@@ -1,3 +1,9 @@
+/* 
+ * Copyright 2019-2020 Christophe Vincent Munilla, FR Micro Entreprise - All Rights Reserved
+ * 
+ * RecolInline Tools Suite
+ * @contact cmunilla@cmssi.fr
+ */
 package cmssi.museum.dao.entity;
 
 import java.io.Serializable;
@@ -31,7 +37,7 @@ import javax.persistence.Table;
 public class Model implements Serializable
 {
 	/**
-	 * 
+	 * Generated long ID
 	 */
 	private static final long serialVersionUID = -7861106091595008569L;
 

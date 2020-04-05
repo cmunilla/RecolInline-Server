@@ -10,11 +10,11 @@
   </parent>
   
   <groupId>cmssi.museum.recolinline.database</groupId>
-  <artifactId>recolinline-database-sql</artifactId>
+  <artifactId>recolinline-database-api</artifactId>
 
   <packaging>jar</packaging>
   
-  <name>RecolInline tools suite - relational database handler</name>
+  <name>RecolInline tools suite - database handler API</name>
   
   <dependencies>
 	<dependency>
@@ -23,30 +23,16 @@
     	<version>1.7.7</version>
     	<scope>provided</scope>
 	</dependency>
-	<dependency>		
-  		<groupId>cmssi.museum.recolinline.database</groupId>
-  		<artifactId>recolinline-database-api</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>		
-  		<groupId>cmssi.museum.recolinline.database</groupId>
-  		<artifactId>jpms-adaptive-jboss</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>		
-  		<groupId>cmssi.museum.recolinline.database</groupId>
-  		<artifactId>jpms-adaptive-hibernate</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>		
-  		<groupId>cmssi.museum.recolinline.database</groupId>
-  		<artifactId>jpms-adaptive-mysql</artifactId>
-		<version>${project.version}</version>
-	</dependency>
 	<dependency>
 		<groupId>cmssi.util</groupId>
   		<artifactId>lyson</artifactId>
-  		<version>0.1</version>
+  		<version>0.4</version>
+    	<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>cmssi.museum.recolinline.core</groupId>
+  		<artifactId>recolinline-controler-api</artifactId>
+    	<version>${project.version}</version>
 	</dependency>
   </dependencies>
   
@@ -76,13 +62,10 @@
 							<manifestLocation>target/outputManifest/</manifestLocation>
 							<instructions>								
 								<Built-By>cmunilla@cmssi.fr</Built-By>
-								<Automatic-Module-Name>recolinline.database.sql</Automatic-Module-Name>
+								<Automatic-Module-Name>recolinline.database.api</Automatic-Module-Name>
 								<_nouses>true</_nouses>  
 								<_nodefaultversion>true</_nodefaultversion>
-								<_failok>true</_failok>								
-								<Provide-Capability>
-									cmssi.recolinline.database;version:=0.3
-								</Provide-Capability>
+								<_failok>true</_failok>
 							</instructions>
 						</configuration>
                 	</execution>

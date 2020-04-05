@@ -1,5 +1,3 @@
--- MySQL Workbench Forward Engineering
-
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
@@ -215,7 +213,7 @@ DROP TABLE IF EXISTS `Line` ;
 CREATE TABLE IF NOT EXISTS `Line` (
   `idField` INT NOT NULL,
   `idSheet` INT NOT NULL,
-  `line` VARCHAR(32000) NULL,
+  `line` TEXT NULL,
    PRIMARY KEY (`idField`, `idSheet`),
   CONSTRAINT `line_idField_fk`
     FOREIGN KEY (`idField`)
@@ -417,7 +415,7 @@ BEGIN
     THEN
 		SELECT idType, idDomain, label FROM Type WHERE Type.idDomain = idDomainFk;
 	ELSE
-        SELECT GetTypes (parentDomain,FALSE);
+        SELECT GetTypes (parentDomain,FALSE)
         UNION ALL
         SELECT idType, idDomain, label FROM Type WHERE Type.idDomain = idDomainFk;
 	END IF;
@@ -443,7 +441,7 @@ BEGIN
 	INSERT INTO Models SELECT idModel, label FROM Model WHERE Model.idDomain = idDomainFk;
 END;$$
 
-DELIMITER ;
+DELIMITER ;		
 -- -----------------------------------------------------
 -- procedure GetSheetsFromMuseum
 -- -----------------------------------------------------
@@ -451,7 +449,7 @@ DELIMITER ;
 USE `recolinline`;
 DROP procedure IF EXISTS `GetSheetsFromMuseum`;
 
-DELIMITER $$
+DELIMITER $$	
 USE `recolinline`$$
 CREATE PROCEDURE `GetSheetsFromMuseum`(IN idMuseumFk INT, IN fstIndex INT, IN lstIndex INT)
 BEGIN
@@ -516,19 +514,17 @@ END;$$
 DELIMITER ;
 
 -- -----------------------------------------------------
--- procedure GetSheet
+-- procedure GetSheetFields
 -- -----------------------------------------------------
 
 USE `recolinline`;
-DROP procedure IF EXISTS `GetSheetLines`;
+DROP procedure IF EXISTS `GetSheetFields`;
 
 DELIMITER $$
 USE `recolinline`$$
-CREATE PROCEDURE `GetSheetLines`(IN idSheetPk INT, IN idUserFk INT)
+CREATE PROCEDURE `GetSheetFields`(IN idMuseumFk INT, IN idDomainFk INT, IN idUserFk INT)
 BEGIN
-	DECLARE idDomainFk INT;
 	DECLARE idModelFk INT;
-	DECLARE idMuseumFk INT;
 	DECLARE idRoleFk INT;
 	DECLARE idVisibilityFk INT;
 	DECLARE labelVisibility VARCHAR(1024);
@@ -536,18 +532,14 @@ BEGIN
 	DECLARE done BOOLEAN DEFAULT FALSE;
 	
 	DECLARE cur CURSOR FOR SELECT * FROM Models;
-	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;	
-		
-	SELECT idDomain, idMuseum INTO idDomainFk, idMuseumFk FROM Sheet 
-	WHERE Sheet.idSheet = idSheetPk;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;			
 	
 	SELECT idRole INTO idRoleFk FROM MusuemUser 
 	WHERE MusuemUser.idMuseum = idMuseumFk AND MuseumUser.idUser = idUserFk;
 		
 	CALL GetModels(idDomainFk, TRUE);	
 	
-	CREATE TEMPORARY TABLE IF NOT EXISTS sheetInstance (
-		idSheet INT, 
+	CREATE TEMPORARY TABLE IF NOT EXISTS sheetSkeleton (
 		idModel INT, 
 		idField INT,
 		idType INT,
@@ -556,36 +548,49 @@ BEGIN
 		labelField VARCHAR(1024),
 		labelType VARCHAR(1024),
 		labelVisibility VARCHAR(1024),
-		constraints VARCHAR(25000),
-		isText BOOLEAN,
-		line VARCHAR(25000));
+		constraints TEXT,
+		isText BOOLEAN);
 		
 	OPEN cur;
 	read_loop: LOOP
 		FETCH cur INTO idModelFk ,labelModel;
 		IF done THEN LEAVE read_loop; END IF;
 		
-		INSERT INTO sheetInstance
-		SELECT idSheetPk, idModelFk, Line.idField, Field.idType, Visibility.idVisibility, labelModel, 
+		INSERT INTO sheetSkeleton
+		SELECT idModelFk, Field.idField, Field.idType, Visibility.idVisibility, labelModel, 
 		Field.label, Type.label, Visibility.label, CONCAT('[',GROUP_CONCAT(CONCAT('{','"operator":"',
-		Operator.label,'",','"operand":"', Constraint.operand,'"','}')),']'), Type.isText, Line.line 
-		FROM Field, Type, Line, FieldVisibility, Visibility, Constraint, Operator 
-		WHERE Line.idField = Field.idField 
-		AND FieldVisibility.idField = Field.idField 
-		AND FieldVisibility.idRole = idRoleFk
-		AND FieldVisibility.idVisibility = Visibility.idVisibility
-		AND Line.idSheet = idSheetPk 
+		Operator.label,'",','"operand":"', `Constraint`.`operand`,'"','}')),']'), Type.isText 
+		FROM Field, Type, FieldVisibility, Visibility, `Constraint`, Operator 
+		WHERE FieldVisibility.idField = Field.idField 
+		AND FieldVisibility.idRole = idRoleFk 
+		AND FieldVisibility.idVisibility = Visibility.idVisibility 
 		AND Field.idType = Type.idType 
-		AND Field.idModel = idModelFk
-		AND Constraint.idField = Field.idField
-		AND Constraint.idOperator = Operator.idOperator
-		GROUP BY Constraint.idField
+		AND Field.idModel = idModelFk 
+		AND `Constraint`.`idField` = Field.idField 
+		AND `Constraint`.`idOperator` = Operator.idOperator 
+		GROUP BY Field.idField;
 	END LOOP;
 	CLOSE cur;
 
-	SELECT * FROM sheetInstance;
+	SELECT * FROM sheetSkeleton;
 	DROP TEMPORARY TABLE IF EXISTS Models;	
-	DROP TEMPORARY TABLE IF EXISTS sheetInstance;	
+	DROP TEMPORARY TABLE IF EXISTS sheetSkeleton;	
+END;$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure GetSheetLines
+-- -----------------------------------------------------
+
+USE `recolinline`;
+DROP procedure IF EXISTS `GetSheetLines`;
+
+DELIMITER $$
+USE `recolinline`$$
+CREATE PROCEDURE `GetSheetLines`(IN idSheetFk INT)
+BEGIN	
+	SELECT * from Line WHERE Line.idSheet = idSheetFk;
 END;$$
 
 DELIMITER ;
@@ -653,7 +658,6 @@ INSERT INTO `Domain` (`refDomain`, `label`) VALUES (NULL, 'ARTIFACT');
 
 COMMIT;
 
-
 -- -----------------------------------------------------
 -- Data for table `Role`
 -- -----------------------------------------------------
@@ -667,7 +671,6 @@ INSERT INTO `Role` (`label`) VALUES ('NONE');
 
 COMMIT;
 
-
 -- -----------------------------------------------------
 -- Data for table `Visibility`
 -- -----------------------------------------------------
@@ -678,7 +681,6 @@ INSERT INTO `Visibility` (`label`) VALUES ('DISABLED');
 INSERT INTO `Visibility` (`label`) VALUES ('ENABLED');
 
 COMMIT;
-
 
 -- -----------------------------------------------------
 -- Data for table `Operator`
@@ -695,7 +697,6 @@ INSERT INTO `Operator` ( `label`) VALUES ('ALL');
 INSERT INTO `Operator` ( `label`) VALUES ('REGEXP');
 
 COMMIT;
-
 
 -- -----------------------------------------------------
 -- Data for table `User`
@@ -721,5 +722,3 @@ USE `recolinline`;
 INSERT INTO `hibernate_sequence` values ( 1 );
 
 COMMIT;
--- -----------------------------------------------------
--- -----------------------------------------------------

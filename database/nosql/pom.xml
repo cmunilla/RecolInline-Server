@@ -9,8 +9,8 @@
     <version>0.3</version>
   </parent>
   
-  <groupId>cmssi.museum.recolinline.db</groupId>
-  <artifactId>nosql</artifactId>
+  <groupId>cmssi.museum.recolinline.database</groupId>
+  <artifactId>recolinline-database-nosql</artifactId>
 
   <packaging>jar</packaging>
   
@@ -66,7 +66,7 @@
 		<dependency>
 		    <groupId>org.eclipse.jetty</groupId>
 		    <artifactId>jetty-server</artifactId>
-		    <version>9.3.24.v20180605</version>
+		    <version>9.4.12.v20180830</version>
 		    <scope>test</scope>
 		</dependency>
 		<dependency>

@@ -6,6 +6,7 @@ import org.hibernate.cfg.AnnotationConfiguration;
 
 /**
  * A PersistenceService allows to interact with the persistent framework
+ * to access to managed entities 
  * 
  * @author cmunilla@cmssi.fr
  * @version 0.3

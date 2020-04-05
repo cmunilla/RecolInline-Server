@@ -9,6 +9,7 @@
     <version>0.3</version>
   </parent>
   
+  <groupId>cmssi.museum.recolinline.database</groupId>
   <artifactId>jpms-adaptive-mysql</artifactId>
 
   <packaging>jar</packaging>

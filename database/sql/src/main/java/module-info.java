@@ -2,12 +2,14 @@
  * @author cmunilla@cmssi.fr
  * @version 0.3
  */
-module cmssi.recolinline.sql {
+module recolinline.database.sql {
 
 	requires jpms.adaptive.jboss;
 	requires jpms.adaptive.mysql;
 	requires jpms.adaptive.hibernate;
 	
+	requires transitive recolinline.database.api;
+		
 	exports cmssi.museum.dao.service;
 	exports cmssi.museum.dao.entity;
 	exports cmssi.museum;

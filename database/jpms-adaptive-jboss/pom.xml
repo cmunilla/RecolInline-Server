@@ -11,6 +11,7 @@
 		<version>0.3</version>
 	</parent>
 
+    <groupId>cmssi.museum.recolinline.database</groupId>
 	<artifactId>jpms-adaptive-jboss</artifactId>
 
 	<packaging>jar</packaging>
@@ -19,7 +20,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>cmssi.museum.recolinline</groupId>
+			<groupId>cmssi.museum.recolinline.database</groupId>
 			<artifactId>jpms-adaptive-hibernate</artifactId>
 			<version>0.3</version>
 		</dependency>
@@ -759,16 +760,32 @@
 									<version>1.6.0</version>
 									<type>jar</type>
 								</artifactItem>
+								<!--
 								<artifactItem>
 									<groupId>sun-jaxws</groupId>
 									<artifactId>jaxws-api</artifactId>
 									<version>2.1.1</version>
 									<type>jar</type>
 								</artifactItem>
+								-->
+								<artifactItem>
+									<groupId>javax.xml.ws</groupId>
+    								<artifactId>jaxws-api</artifactId>
+    								<version>2.3.1</version>
+									<type>jar</type>
+								</artifactItem>
+								<!--
 								<artifactItem>
 									<groupId>sun-jaxws</groupId>
 									<artifactId>jsr181-api</artifactId>
 									<version>2.1.1</version>
+									<type>jar</type>
+								</artifactItem>
+								-->
+								<artifactItem>
+									<groupId>javax.jws</groupId>
+    								<artifactId>jsr181-api</artifactId>
+    								<version>1.0-MR1</version>
 									<type>jar</type>
 								</artifactItem>
 								<artifactItem>
