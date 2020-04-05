@@ -14,12 +14,13 @@
 
   <packaging>pom</packaging>
   
-  <name>Museum Inventory - RecolInline platform database parent</name>
+  <name>RecolInline tools suite - database parent</name>
   
   <modules>
   	<module>jpms-adaptive-mysql</module>
   	<module>jpms-adaptive-hibernate</module>
   	<module>jpms-adaptive-jboss</module>
+	<module>database-api</module>
   	<module>sql</module>
   	<!--<module>nosql</module>-->
   </modules>
