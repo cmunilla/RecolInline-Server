@@ -17,9 +17,9 @@
   <name>Museum Inventory - RecolInline platform core parent</name>
   
   <modules>
-  	<module>controler-api</module>        
+  	<module>controler-api</module>  
+ 	<!--	      
 	<module>controler</module>
- 	<!--	
 	<module>security-api</module> 
 	<module>security</module>
  	--> 
