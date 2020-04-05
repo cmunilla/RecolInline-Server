@@ -21,7 +21,7 @@
   	<module>jpms-adaptive-hibernate</module>
   	<module>jpms-adaptive-jboss</module>
   	<module>sql</module>
-  	<module>nosql</module>
+  	<!--<module>nosql</module>-->
   </modules>
   
 </project>

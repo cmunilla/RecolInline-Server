@@ -135,8 +135,8 @@
     </build>
 
   <modules>
-    <module>database</module>
     <module>core</module>
+    <module>database</module>
   </modules>
   
 </project>
