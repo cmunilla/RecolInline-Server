@@ -14,7 +14,7 @@
 
   <packaging>jar</packaging>
   
-  <name>Museum Inventory - JPMS adaptive Mysql connector library</name>
+  <name>RecolInline tools suite - JPMS adaptive Mysql connector library</name>
   
   <dependencies>
   	<dependency>

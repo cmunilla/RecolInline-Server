@@ -14,7 +14,7 @@
 
   <packaging>pom</packaging>
   
-  <name>Museum Inventory - RecolInline platform core parent</name>
+  <name>RecolInline tools suite - controler parent</name>
   
   <modules>
   	<module>controler-api</module>  

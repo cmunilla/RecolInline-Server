@@ -16,7 +16,7 @@
 
 	<packaging>jar</packaging>
 
-	<name>Museum Inventory - JPMS adaptive JBoss EJB libraries</name>
+	<name>RecolInline tools suite - JPMS adaptive JBoss EJB libraries</name>
 
 	<dependencies>
 		<dependency>
