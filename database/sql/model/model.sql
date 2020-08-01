@@ -211,6 +211,7 @@ CREATE TABLE IF NOT EXISTS `Sheet` (
   `idMuseum` INT NOT NULL,
   `idDomain` INT NOT NULL,
   `label` VARCHAR(1024) NOT NULL,
+  `parent` INT NULL, 
   PRIMARY KEY (`idSheet`),
   CONSTRAINT `sheet_idDomain_fk`
     FOREIGN KEY (`idDomain`)
@@ -221,11 +222,57 @@ CREATE TABLE IF NOT EXISTS `Sheet` (
     FOREIGN KEY (`idMuseum`)
     REFERENCES `Museum` (`idMuseum`)
     ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `sheet_parent_fk`
+    FOREIGN KEY (`parent`)
+    REFERENCES `Sheet` (`idSheet`)
+    ON DELETE SET NULL
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE INDEX `sheet_idDomain_fk_idx` ON `Sheet` (`idDomain` ASC);
 CREATE INDEX `sheet_idMuseum_fk_idx` ON `Sheet` (`idMuseum` ASC);
+CREATE INDEX `sheet_parent_fk_idx` ON `Sheet` (`parent` ASC);
+
+-- -----------------------------------------------------
+-- Table `Links`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Links` ;
+
+CREATE TABLE IF NOT EXISTS `Links` (
+  `link1` INT NOT NULL,
+  `link2` INT NOT NULL,
+  PRIMARY KEY (`link1`, `link2`),
+  CONSTRAINT `links_link1_fk`
+    FOREIGN KEY (`link1`)
+    REFERENCES `Sheet` (`idSheet`) 
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `links_link2_fk`
+    FOREIGN KEY (`link2`)
+    REFERENCES `Sheet` (`idSheet`) 
+    ON DELETE CASCADE 
+    ON UPDATE NO ACTION
+)
+ENGINE = InnoDB;
+
+CREATE INDEX `links_link1_fk_idx` ON `Sheet` (`idSheet` ASC);
+CREATE INDEX `links_link2_fk_idx` ON `Sheet` (`idSheet` ASC);
+
+DROP TRIGGER IF EXISTS mirror_link;
+
+delimiter // 
+CREATE TRIGGER mirror_link AFTER INSERT ON Links
+ FOR EACH ROW 
+ BEGIN 
+	DECLARE counter  INT;
+	SELECT COUNT(*) INTO counter FROM Links WHERE Links.link1=NEW.link2 AND Links.link2=NEW.link1;
+    IF count = 0 THEN 
+		INSERT INTO Links(link1,link2) VALUES (NEW.link2,NEW.link1); 
+	END  IF; 
+ END; 
+ //
+ delimiter ;
 
 -- -----------------------------------------------------
 -- Table `Line`
@@ -235,8 +282,9 @@ DROP TABLE IF EXISTS `Line` ;
 CREATE TABLE IF NOT EXISTS `Line` (
   `idField` INT NOT NULL,
   `idSheet` INT NOT NULL,
+  `timestamp` BIGINT NOT NULL,
   `line` TEXT NULL,
-   PRIMARY KEY (`idField`, `idSheet`),
+   PRIMARY KEY (`idField`, `idSheet`, `timestamp`),
   CONSTRAINT `line_idField_fk`
     FOREIGN KEY (`idField`)
     REFERENCES `Field` (`idField`)
@@ -667,6 +715,46 @@ END;$$
 
 DELIMITER ;
 
+-- -----------------------------------------------------
+-- procedure GetChildren
+-- -----------------------------------------------------
+
+USE `recolinline`;
+DROP procedure IF EXISTS `GetChildren`;
+
+DELIMITER $$
+USE `recolinline`$$
+CREATE PROCEDURE `GetChildren`(IN idSheetFk INT)
+BEGIN
+	SELECT Sheet.idSheet, Sheet.label FROM Sheet
+	WHERE Sheet.parent = idSheetFk;
+END;$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure GetLinked
+-- -----------------------------------------------------
+
+USE `recolinline`;
+DROP procedure IF EXISTS `GetLinked`;
+
+DELIMITER $$
+USE `recolinline`$$
+CREATE PROCEDURE `GetLinked`(IN idSheetFk INT)
+BEGIN
+	SELECT Sheet.idSheet, Sheet.label FROM Sheet, Links
+	WHERE Sheet.idSheet = Links.link1
+	AND Links.link2 = idSheetFk ;
+END;$$
+
+DELIMITER ;
+
+-------------------------------------------------------
+
+-------------------------------------------------------
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -744,3 +832,66 @@ USE `recolinline`;
 INSERT INTO `hibernate_sequence` values ( 1 );
 
 COMMIT;
+
+-- -----------------------------------------------------
+-- INTRODUCE THE ARTEFACT DOMAIN
+-- -----------------------------------------------------
+-- the artefact domain
+INSERT INTO `recolinline`.`Domain`(refDomain,label) VALUES (NULL,'ARTEFACT');
+-- the text author field
+INSERT INTO `recolinline`.`Model` (idDomain, label) VALUES (1, 'IDENTITY');
+-- text value type
+INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES (1, true, 'string');
+-- text value type specifying a date
+INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES (1, true, 'datetime');
+-- standard integer value type 
+INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES (1, false, 'int');
+-- long value specifying unix epoch milliseconds formated date
+INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES (1, false, 'epoch');
+-- long value specifying unix epoch milliseconds formated date
+INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES (1, false, 'boolean');
+
+-- the historical period Type
+INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES  (1, true, 'time_measure');
+INSERT INTO `recolinline`.`Category` (idType, label, cardinality) VALUES  (6, 'time', );
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (1, 'day');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (1, 'month');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (1, 'year');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (1, 'century');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (1, 'period');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (1, 'era');
+
+-- the historical period Type
+INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES  (1, true, 'historical_period');
+INSERT INTO `recolinline`.`Category` (idType, label, cardinality) VALUES  (7, 'period', );
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, '');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, '');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, '');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, '');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, '');
+
+-- the geological era Type
+INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES  (1, true, 'geological_era');
+INSERT INTO `recolinline`.`Category` (idType, label, cardinality) VALUES  (8, 'era', );
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (3, '');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (3, '');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (3, '');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (3, '');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (3, '');
+  
+-- the text name 
+INSERT INTO `recolinline`.`Field` (idModel, idType, label) VALUES  (1, 1, 'name');
+-- the text description 
+INSERT INTO `recolinline`.`Field` (idModel, idType, label) VALUES  (1, 1, 'description'); 
+-- the text author
+INSERT INTO `recolinline`.`Field` (idModel, idType, label) VALUES  (1, 1, 'author');
+-- the time type in use 
+INSERT INTO `recolinline`.`Field` (idModel, idType, label) VALUES  (1, 3, 'time_measure'); 
+-- the time value 
+INSERT INTO `recolinline`.`Field` (idModel, idType, label) VALUES  (1, 1, 'time_value'); 
+
+
+
+
+
+
