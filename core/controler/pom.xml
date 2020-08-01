@@ -41,7 +41,7 @@
 	<dependency>
 		<groupId>cmssi.util</groupId>
   		<artifactId>lyson</artifactId>
-  		<version>0.1</version>
+  		<version>0.4</version>
 	</dependency>
   </dependencies>
   
