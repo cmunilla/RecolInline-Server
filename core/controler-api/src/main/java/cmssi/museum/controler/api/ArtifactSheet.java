@@ -26,9 +26,11 @@ package cmssi.museum.controler.api;
 import cmssi.museum.controler.api.format.JsonStringFormat;
 
 /**
- * 
- * @param <F>
- * @param <M>
+ * An ArtifactSheet held the fields of the set of models of the domain 
+ * to which it belongs
+ *   
+ * @param <F> the extended  {@link ArtifactField}
+ * @param <M> the extended {@link ArtifactModel}
  * 
  * @author cmunilla@cmssi.fr 
  * @version 0.3

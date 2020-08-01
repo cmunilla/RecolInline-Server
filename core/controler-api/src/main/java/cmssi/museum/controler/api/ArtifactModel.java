@@ -27,7 +27,7 @@ import cmssi.museum.controler.api.format.JsonStringFormat;
 
 /**
  *
- * @param <F> the held field type
+ * @param <F> the extended {@link ArtifactField}
  * 
  * @author cmunilla@cmssi.fr 
  * @version 0.3

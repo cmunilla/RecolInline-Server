@@ -28,6 +28,6 @@ package cmssi.museum.controler.api;
  * @version 0.3
  */
 public interface ArtifactField {
-		
-	FieldVisibility getVisibility();
+	
+FieldVisibility getVisibility();
 }
