@@ -34,22 +34,30 @@ public class UnauthorizedSheetAccessException extends Exception {
 
 
 	/**
-	 * @param s
+	 * Constructor
+	 * 
+	 * @param message the error message
 	 */
-	public UnauthorizedSheetAccessException(String s) {
-		super(s);
+	public UnauthorizedSheetAccessException(String message) {
+		super(message);
 	}
 
 	/**
-	 * @param cause
+	 * Constructor
+	 * 
+	 * @param cause the {@link Throwable} cause of the UnauthorizedSheetAccessException to be
+	 * instantiated
 	 */
 	public UnauthorizedSheetAccessException(Throwable cause) {
 		super(cause);
 	}
 
 	/**
-	 * @param message
-	 * @param cause
+	 * Constructor
+	 * 
+	 * @param message the error message
+	 * @param cause the {@link Throwable} cause of the UnauthorizedSheetAccessException to be
+	 * instantiated
 	 */
 	public UnauthorizedSheetAccessException(String message, Throwable cause) {
 		super(message, cause);

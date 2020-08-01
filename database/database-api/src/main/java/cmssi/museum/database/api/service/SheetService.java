@@ -81,5 +81,4 @@ public interface SheetService {
 	 * @throws UnauthorizedSheetAccessException if the specified user is not allowed to create a sheet
 	 */
 	 SheetFormat createSheet(Integer idMuseum, Integer idDomain, Integer idUser) throws UnauthorizedSheetAccessException;
-		
 }

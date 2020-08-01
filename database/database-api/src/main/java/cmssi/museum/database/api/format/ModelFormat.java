@@ -34,8 +34,7 @@ import cmssi.museum.controler.api.ArtifactModel;
  * @author cmunilla@cmssi.fr
  * @version 0.3
  */
-public class ModelFormat extends JsonStringFormat<FieldFormat> 
-implements ArtifactModel<FieldFormat> {
+public class ModelFormat extends JsonStringFormat<FieldFormat> implements ArtifactModel<FieldFormat> {
 		
 	/**
 	 * Construtor 
