@@ -32,6 +32,10 @@ package cmssi.museum.database.api.service;
  */
 public class UnauthorizedSheetAccessException extends Exception {
 
+	/**
+	 * Generated long serial ID 
+	 */
+	private static final long serialVersionUID = 563678762326884525L;
 
 	/**
 	 * Constructor

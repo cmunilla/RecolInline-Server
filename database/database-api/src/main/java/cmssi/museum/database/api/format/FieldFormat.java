@@ -23,9 +23,9 @@
  */
 package cmssi.museum.database.api.format;
 
-import cmssi.museum.controler.api.format.JsonStringFormat;
 import cmssi.museum.controler.api.ArtifactField;
 import cmssi.museum.controler.api.FieldVisibility;
+import cmssi.museum.controler.api.format.JsonStringFormat;
 
 /**
  * Extended {@link JsonStringFormat} dedicated to field data structure format
@@ -36,7 +36,9 @@ import cmssi.museum.controler.api.FieldVisibility;
 public class FieldFormat extends JsonStringFormat<String> implements ArtifactField {
 
 	protected String constraints = null;
+
 	protected String labelType = null;
+	
 	protected FieldVisibility visibility = null;
 
 	/**
@@ -56,6 +58,16 @@ public class FieldFormat extends JsonStringFormat<String> implements ArtifactFie
 	 */
 	public void setConstraints(String constraints) {
 		this.constraints = constraints;
+	}
+	
+	/**
+	 * Returns the set of JSON formated constraints applying on the {@link 
+	 * cmssi.museum.dao.entity.Field} described by this FieldFormat
+	 * 
+	 * @return the JSON formated description of the applying constraints
+	 */
+	public String getConstraints() {
+		return this.constraints;
 	}
 	
 	/**
@@ -120,20 +132,20 @@ public class FieldFormat extends JsonStringFormat<String> implements ArtifactFie
 		StringBuilder builder = new StringBuilder();
 		builder.append('"').append(this.getName()).append("\" : {");
 
-		if (!FieldVisibility.HIDDEN.equals(this.visibility)) {
+		if (!FieldVisibility.HIDDEN.equals(this.getVisibility())) {
 			builder.append("\"value\" : ");
 			builder.append(doFormat());		
 			builder.append(", ");
 		}
-		if(this.constraints != null) {
+		if(this.getConstraints() != null) {
 			builder.append("\"constraints\" :");
-			builder.append(this.constraints);		
+			builder.append(this.getConstraints());		
 			builder.append(", ");
 		}
 		builder.append(" , \"visibility\" : \"");
-		builder.append(this.visibility.name());
+		builder.append(this.getVisibility().name());
 		builder.append(" , \"type\" : \"");
-		builder.append(this.labelType);
+		builder.append(this.getLabelType());
 		builder.append("\" }");
 		return builder.toString();
 	}

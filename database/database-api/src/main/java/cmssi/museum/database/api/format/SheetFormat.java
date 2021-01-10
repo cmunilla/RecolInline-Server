@@ -24,6 +24,9 @@
 package cmssi.museum.database.api.format;
 
 import cmssi.museum.controler.api.format.JsonStringFormat;
+import cmssi.museum.database.api.format.builder.SheetFormatBuilder;
+import cmssi.lyson.LysonParser;
+import cmssi.lyson.handler.mapping.MappingHandler;
 import cmssi.museum.controler.api.ArtifactSheet;
 
 /**
@@ -34,6 +37,13 @@ import cmssi.museum.controler.api.ArtifactSheet;
  */
 public class SheetFormat extends JsonStringFormat<ModelFormat> implements ArtifactSheet<FieldFormat,ModelFormat> {
 
+	public static SheetFormat valueOf(String sheet) {
+		MappingHandler mapping = new MappingHandler(SheetFormatBuilder.class);
+		new LysonParser(sheet).parse(mapping);
+		SheetFormatBuilder builder = mapping.getMapped();
+		return builder.build();
+	}
+	
 	private String signature;
 	private String hash;
 
@@ -101,4 +111,6 @@ public class SheetFormat extends JsonStringFormat<ModelFormat> implements Artifa
 	public String getHash() {
 		return this.hash;
 	}
+	
+	
 }

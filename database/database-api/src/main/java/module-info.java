@@ -28,7 +28,10 @@
 module recolinline.database.api {
 
 	requires transitive recolinline.controler.api;
+	requires cmssi.lyson;
 
 	exports cmssi.museum.database.api.format;
 	exports cmssi.museum.database.api.service;
+	
+	opens cmssi.museum.database.api.format.builder to cmssi.lyson;
 }

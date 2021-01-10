@@ -26,7 +26,7 @@ package cmssi.museum.database.api.format;
 import cmssi.museum.controler.api.format.JsonStringFormat;
 
 /**
- * Extended {@link JsonStringFormat} dedicated to field data structure holding textual value format
+ * Extended {@link JsonStringFormat} dedicated to field data structure holding text value
  * 
  * @author cmunilla@cmssi.fr
  * @version 0.3
