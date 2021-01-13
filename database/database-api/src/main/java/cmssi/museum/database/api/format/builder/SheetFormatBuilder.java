@@ -45,6 +45,9 @@ public class SheetFormatBuilder {
 	@LysonMapping(mapping=MappingConfiguration.IDENTITY_MAPPING)
 	protected String name;
 
+	@LysonMapping(mapping="id")
+	protected int identifier;
+	
 	protected List<ModelFormatBuilder> models;
 
 	protected String signature;
@@ -64,6 +67,15 @@ public class SheetFormatBuilder {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	/**
+	 * Defines the Integer identifier of the related {@link SheetFormat} described by this SheetFormatBuilder
+	 * 
+	 * @param identifier the Integer identifier of the described {@link SheetFormat}
+	 */
+	public void setIdentifier(Integer identifier) {
+		this.identifier = identifier;
 	}
 
 	/**
@@ -103,6 +115,7 @@ public class SheetFormatBuilder {
 	public SheetFormat build() {
 		SheetFormat sheetFormat  = new SheetFormat();
 		sheetFormat.setName(this.name);
+		sheetFormat.setIdentifier(this.identifier);
 		sheetFormat.setSignature(this.signature);
 		sheetFormat.setHash(this.hash);
 		models.stream().forEach(m->sheetFormat.append(m.build()));

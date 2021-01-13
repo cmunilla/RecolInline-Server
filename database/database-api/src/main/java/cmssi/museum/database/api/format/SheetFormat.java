@@ -37,6 +37,10 @@ import cmssi.museum.controler.api.ArtifactSheet;
  */
 public class SheetFormat extends JsonStringFormat<ModelFormat> implements ArtifactSheet<FieldFormat,ModelFormat> {
 
+	/**
+	 * @param sheet
+	 * @return
+	 */
 	public static SheetFormat valueOf(String sheet) {
 		MappingHandler mapping = new MappingHandler(SheetFormatBuilder.class);
 		new LysonParser(sheet).parse(mapping);
@@ -44,7 +48,10 @@ public class SheetFormat extends JsonStringFormat<ModelFormat> implements Artifa
 		return builder.build();
 	}
 	
+	private int identifier;	
+	
 	private String signature;
+	
 	private String hash;
 
 	/**
@@ -56,27 +63,28 @@ public class SheetFormat extends JsonStringFormat<ModelFormat> implements Artifa
 
 	@Override
 	public String format() {
-		var chars = new char[] { ' ' , ',' };
+		var sep = ',';
 		StringBuilder builder = new StringBuilder();
-		if(this.signature != null) {
-			builder.append("\"sign\" : \"");
-			builder.append(this.signature);
-			builder.append('"');
-			builder.append(chars[1]);
-		}
+		builder.append('"').append(this.getName()).append("\" : {");
+		builder.append("\"id\" : ");
+		builder.append(this.identifier);
 		if(this.hash != null) {
+			builder.append(sep);
 			builder.append("\"hash\" : \"");
 			builder.append(this.hash);
 			builder.append('"');
-			builder.append(chars[1]);
 		}
-		builder.append('"').append(this.getName()).append("\" : {");
+		if(this.signature != null) {
+			builder.append(sep);
+			builder.append("\"sign\" : \"");
+			builder.append(this.signature);
+			builder.append('"');
+		}
 		super.elements.forEach(e -> {
 			String eformat = e.format();
 			if(eformat!=null) {
-				builder.append(chars[0]);
+				builder.append(sep);
 				builder.append(eformat);
-				chars[0] = chars[1];
 			}
 		});
 		builder.append(" }");
@@ -90,6 +98,24 @@ public class SheetFormat extends JsonStringFormat<ModelFormat> implements Artifa
 	 */
 	public void setName(String name) {
 		super.name = name;
+	}
+
+	/**
+	 * Defines the Integer identifier of the sheet described by this SheetFormat
+	 * 
+	 * @param identifier the described sheet's Integer identifier
+	 */
+	public void setIdentifier(int identifier) {
+		this.identifier = identifier;
+	}
+
+	/**
+	 * Returns the Integer identifier of the sheet described by this SheetFormat
+	 * 
+	 * @return the described sheet's Integer identifier
+	 */
+	public int getIdentifier() {
+		return this.identifier;
 	}
 	
 	@Override

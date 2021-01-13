@@ -25,7 +25,7 @@ package cmssi.museum.database.api.format.builder;
 
 import cmssi.museum.controler.api.format.JsonStringFormat;
 import cmssi.museum.database.api.format.FieldFormat;
-
+import cmssi.museum.database.api.format.SheetFormat;
 import cmssi.lyson.annotation.LysonMapping;
 import cmssi.lyson.handler.mapping.MappingConfiguration;
 
@@ -39,6 +39,9 @@ public class FieldFormatBuilder {
 
 	@LysonMapping(mapping=MappingConfiguration.IDENTITY_MAPPING)
 	protected String name;
+
+	@LysonMapping(mapping="id")
+	protected int identifier;
 	
 	@LysonMapping(mapping="constraints")
 	protected String constraints;
@@ -112,6 +115,15 @@ public class FieldFormatBuilder {
 	}	
 
 	/**
+	 * Defines the Integer identifier of the related {@link FieldFormat} described by this FieldFormatBuilder
+	 * 
+	 * @param identifier the Integer identifier of the described {@link FieldFormat}
+	 */
+	public void setIdentifier(Integer identifier) {
+		this.identifier = identifier;
+	}
+
+	/**
 	 * Returns the {@link FieldFormat} built on this FieldFormatBuilder 
 	 * 
 	 * @return the {@link FieldFormat} from this FieldFormatBuilder
@@ -120,15 +132,15 @@ public class FieldFormatBuilder {
 		FieldFormat fieldFormat  = new FieldFormat(this.name);
 		fieldFormat.setLabelType(this.type);
 		fieldFormat.setConstraints(this.constraints);
+		fieldFormat.setIdentifier(this.identifier);
 		fieldFormat.setVisibility(this.visibility);
 		return fieldFormat;
 	}
 
 	/**
-	 * Returns the String value of the related {@link cmssi.museum.dao.entity.Field} described 
-	 * by this FieldFormatBuilder
+	 * Returns the String value of the related {@link FieldFormat} described by this FieldFormatBuilder
 	 * 
-	 * @return the String value of the related {@link cmssi.museum.dao.entity.Field}
+	 * @return the String value of the related {@link FieldFormat}
 	 */
 	public String getValue() {
 		return this.value;
