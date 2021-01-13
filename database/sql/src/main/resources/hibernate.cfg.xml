@@ -15,6 +15,7 @@
         <mapping class="cmssi.museum.dao.entity.CategoryEntry"/>  
         <mapping class="cmssi.museum.dao.entity.Contact"/>      
         <mapping class="cmssi.museum.dao.entity.Domain"/>    
+        <mapping class="cmssi.museum.dao.entity.DomainUser"/>    
         <mapping class="cmssi.museum.dao.entity.Field"/>     
         <mapping class="cmssi.museum.dao.entity.FieldSkeleton"/>
         <mapping class="cmssi.museum.dao.entity.Line"/>       

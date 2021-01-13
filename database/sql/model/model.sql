@@ -429,6 +429,36 @@ ENGINE = InnoDB;
 CREATE INDEX `museumUser_idMuseum_fk_idx` ON `MuseumUser` (`idMuseum` ASC);
 
 -- -----------------------------------------------------
+-- Table `DomainUser`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `DomainUser` ;
+
+CREATE TABLE IF NOT EXISTS `DomainUser` (
+  `idDomain` INT NOT NULL,
+  `idUser` INT NOT NULL,
+  `idRole` INT NOT NULL,
+  PRIMARY KEY (`idDomain`, `idUser`),
+  CONSTRAINT `domainUser_idDomain_fk`
+    FOREIGN KEY (`idDomain`)
+    REFERENCES `Domain` (`idDomain`)
+    ON DELETE RESTRICT
+    ON UPDATE NO ACTION,
+  CONSTRAINT `domainUser_idUser_fk`
+    FOREIGN KEY (`idUser`)
+    REFERENCES `User` (`idUser`)
+    ON DELETE RESTRICT
+    ON UPDATE NO ACTION,
+  CONSTRAINT `domainUser_idRole_fk`
+    FOREIGN KEY (`idRole`)
+    REFERENCES `Role` (`idRole`)
+    ON DELETE RESTRICT
+    ON UPDATE NO ACTION)
+    
+ENGINE = InnoDB;
+
+CREATE INDEX `domainUser_idDomain_fk_idx` ON `DomainUser` (`idDomain` ASC);
+
+-- -----------------------------------------------------
 -- Table `Category`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Category` ;
@@ -584,6 +614,37 @@ END;$$
 DELIMITER ;
 
 -- -----------------------------------------------------
+-- procedure GetIdRole
+-- -----------------------------------------------------
+
+USE `recolinline`;
+DROP procedure IF EXISTS `GetIdRole`;
+
+DELIMITER $$
+USE `recolinline`$$
+CREATE PROCEDURE `GetIdRole`(IN idMuseumFk INT, IN idDomainFk INT, IN idUserFk INT)
+BEGIN
+	DECLARE idRoleFk INT;
+
+	SELECT idRole INTO idRoleFk FROM DomainUser 
+	WHERE DomainUser.idDomain = idDomainFk AND DomainUser.idUser = idUserFk;
+	
+	IF ISNULL(idRoleFk) = 1 THEN 
+		SELECT idRole INTO idRoleFk FROM MusuemUser 
+		WHERE MusuemUser.idMuseum = idMuseumFk AND MuseumUser.idUser = idUserFk;	 
+	END  IF; 	
+		
+	IF ISNULL(idRoleFk) = 1 THEN 	
+		SELECT idRole INTO idRoleFk FROM Role WHERE Role.label = 'NONE'; 	
+	END  IF; 
+	
+	SELECT idRoleFk AS RoleIdentifier;
+END;$$
+
+DELIMITER ;
+
+
+-- -----------------------------------------------------
 -- procedure GetSheetFields
 -- -----------------------------------------------------
 
@@ -603,11 +664,18 @@ BEGIN
 	
 	DECLARE cur CURSOR FOR SELECT * FROM Models;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;			
-	
-	SELECT idRole INTO idRoleFk FROM MusuemUser 
-	WHERE MusuemUser.idMuseum = idMuseumFk AND MuseumUser.idUser = idUserFk;
 		
-	CALL GetModels(idDomainFk, TRUE);	
+	SELECT idRole INTO idRoleFk FROM DomainUser 
+	WHERE DomainUser.idDomain = idDomainFk AND DomainUser.idUser = idUserFk;
+	
+	IF ISNULL(idRoleFk) = 1 THEN 
+		SELECT idRole INTO idRoleFk FROM MusuemUser 
+		WHERE MusuemUser.idMuseum = idMuseumFk AND MuseumUser.idUser = idUserFk;	 
+	END  IF; 	
+		
+	IF ISNULL(idRoleFk) = 1 THEN 	
+		SELECT idRole INTO idRoleFk FROM Role WHERE Role.label = 'NONE'; 	
+	END  IF; 
 	
 	CREATE TEMPORARY TABLE IF NOT EXISTS sheetSkeleton (
 		idModel INT, 
@@ -837,23 +905,21 @@ COMMIT;
 -- INTRODUCE THE ARTEFACT DOMAIN
 -- -----------------------------------------------------
 -- the artefact domain
-INSERT INTO `recolinline`.`Domain`(refDomain,label) VALUES (NULL,'ARTEFACT');
--- the text author field
-INSERT INTO `recolinline`.`Model` (idDomain, label) VALUES (1, 'IDENTITY');
+INSERT INTO `recolinline`.`Domain`(idDomain, refDomain,label) VALUES (1, NULL,'ARTEFACT');
 -- text value type
-INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES (1, true, 'string');
+INSERT INTO `recolinline`.`Type`  (idType, idDomain, isText, label) VALUES (1, 1, true, 'string');
 -- text value type specifying a date
-INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES (1, true, 'datetime');
+INSERT INTO `recolinline`.`Type`  (idType, idDomain, isText, label) VALUES (2, 1, true, 'datetime');
 -- standard integer value type 
-INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES (1, false, 'int');
+INSERT INTO `recolinline`.`Type`  (idType, idDomain, isText, label) VALUES (3, 1, false, 'int');
 -- long value specifying unix epoch milliseconds formated date
-INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES (1, false, 'epoch');
+INSERT INTO `recolinline`.`Type`  (idType, idDomain, isText, label) VALUES (4, 1, false, 'epoch');
 -- long value specifying unix epoch milliseconds formated date
-INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES (1, false, 'boolean');
+INSERT INTO `recolinline`.`Type`  (idType, idDomain, isText, label) VALUES (5, 1, false, 'boolean');
 
 -- the historical period Type
-INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES  (1, true, 'time_measure');
-INSERT INTO `recolinline`.`Category` (idType, label, cardinality) VALUES  (6, 'time', );
+INSERT INTO `recolinline`.`Type`  (idType, idDomain, isText, label) VALUES  (6, 1, true, 'time_measure');
+INSERT INTO `recolinline`.`Category` (idCategory, idType, label, cardinality) VALUES  (1, 6, 'time_measure', 1);
 INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (1, 'day');
 INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (1, 'month');
 INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (1, 'year');
@@ -862,23 +928,26 @@ INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (1, 'perio
 INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (1, 'era');
 
 -- the historical period Type
-INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES  (1, true, 'historical_period');
-INSERT INTO `recolinline`.`Category` (idType, label, cardinality) VALUES  (7, 'period', );
-INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, '');
-INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, '');
-INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, '');
-INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, '');
-INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, '');
+INSERT INTO `recolinline`.`Type`  (idType, idDomain, isText, label) VALUES  (7, 1, true, 'historical_period');
+INSERT INTO `recolinline`.`Category` (idCategory, idType, label, cardinality) VALUES  (2, 7, 'historical_period', 1);
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, 'prehistory');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, 'antiquity');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, 'middle age');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, 'modern age');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, 'contemporary period');
+INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (2, 'now');
 
 -- the geological era Type
-INSERT INTO `recolinline`.`Type`  (idDomain, isText, label) VALUES  (1, true, 'geological_era');
-INSERT INTO `recolinline`.`Category` (idType, label, cardinality) VALUES  (8, 'era', );
+INSERT INTO `recolinline`.`Type`  (idType, idDomain, isText, label) VALUES  (8, 1, true, 'geological_era');
+INSERT INTO `recolinline`.`Category` (idType, label, cardinality) VALUES  (8, 'geological_era', 1);
 INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (3, '');
 INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (3, '');
 INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (3, '');
 INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (3, '');
 INSERT INTO `recolinline`.`CategoryEntry` (idCategory, label) VALUES  (3, '');
   
+-- the identity model
+INSERT INTO `recolinline`.`Model` (idModel, idDomain, label) VALUES (1, 1, 'IDENTITY');
 -- the text name 
 INSERT INTO `recolinline`.`Field` (idModel, idType, label) VALUES  (1, 1, 'name');
 -- the text description 
@@ -889,9 +958,3 @@ INSERT INTO `recolinline`.`Field` (idModel, idType, label) VALUES  (1, 1, 'autho
 INSERT INTO `recolinline`.`Field` (idModel, idType, label) VALUES  (1, 3, 'time_measure'); 
 -- the time value 
 INSERT INTO `recolinline`.`Field` (idModel, idType, label) VALUES  (1, 1, 'time_value'); 
-
-
-
-
-
-

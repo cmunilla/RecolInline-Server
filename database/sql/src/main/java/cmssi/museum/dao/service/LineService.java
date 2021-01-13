@@ -23,6 +23,7 @@
  */
 package cmssi.museum.dao.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -76,5 +77,19 @@ public class LineService extends CRUDService<Line> {
 	 */
 	public Map<Integer,Line> getLinesMap(Integer idSheet){
 		return getLines(idSheet).stream().collect(Collectors.toMap(Line::getIdField, l -> l));
+	}
+
+	/**
+	 * 
+	 * @param idSheet
+	 * @param idField
+	 * @param value
+	 */
+	public void updateLine(Integer idSheet, Integer idField, String value){
+		Line line = getLinesMap(idSheet).get(idField);
+		if(line==null)
+			return;
+		line.setLine(value);	
+		super.update(line);
 	}
 }

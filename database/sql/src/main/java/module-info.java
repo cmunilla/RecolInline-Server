@@ -32,6 +32,7 @@ module recolinline.database.sql {
 	requires jpms.adaptive.hibernate;
 	
 	requires transitive recolinline.database.api;
+	requires recolinline.controler.api;
 		
 	exports cmssi.museum.dao.service;
 	exports cmssi.museum.dao.entity;

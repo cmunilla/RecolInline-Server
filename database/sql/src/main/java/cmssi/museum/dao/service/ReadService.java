@@ -25,6 +25,7 @@ package cmssi.museum.dao.service;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -45,7 +46,7 @@ import org.hibernate.criterion.Restrictions;
 abstract class ReadService<T> extends PersistenceService
 {	
 	private Class<T> entityType;
-	private String identityFieldName;
+	private List<String> identityFieldName;
 	
 	/**
 	 * Constructor
@@ -55,6 +56,7 @@ abstract class ReadService<T> extends PersistenceService
 	 */
 	public ReadService(Class<T> entityType){
 		this.entityType = entityType; 
+		this.identityFieldName = new ArrayList<>();
 		
 		Field[] fields = this.entityType.getDeclaredFields();
 		for(Field field : fields) {
@@ -63,13 +65,11 @@ abstract class ReadService<T> extends PersistenceService
 			if(idAnnotation != null) {
 				Column column = field.getAnnotation(Column.class);
 				String columnName = column!= null?column.name():null;
-				this.identityFieldName = columnName==null?field.getName():columnName;
-				break;
+				this.identityFieldName.add(columnName==null?field.getName():columnName);
 			}
 		}
-		if(this.identityFieldName == null) {
+		if(this.identityFieldName.isEmpty()) 
 			throw new NullPointerException("No @Id annotated field found");
-		}
 	}
 	
 	/**
@@ -87,7 +87,7 @@ abstract class ReadService<T> extends PersistenceService
 	 * 
 	 * @return the handled &lt;T&gt; type identity field name
 	 */
-	protected String getIdentityFieldName() {
+	protected List<String> getIdentityFieldName() {
 		return this.identityFieldName;
 	}
 	
@@ -98,6 +98,20 @@ abstract class ReadService<T> extends PersistenceService
 	 */
 	public List<T> getAll() {
 		return getSession().createCriteria(getEntityType()).list();
+	}
+
+	/**
+	 * Returns the List of all registered &lt;T&gt; typed entities
+	 * 
+	 * @param identityFieldName the String identity field name
+	 * @param k the &lt;K&gt; typed identifier 
+	 * 
+	 * @return the registered &lt;T&gt; typed entities List
+	 */
+	public  <K extends Serializable> List<T> getAll(String identityFieldName, K k) {
+		return getSession().createCriteria(getEntityType()
+			).add(Restrictions.eq(identityFieldName, k)
+			).list();
 	}
 	
 	/**
@@ -112,8 +126,27 @@ abstract class ReadService<T> extends PersistenceService
 	 * typed identifier
 	 */
 	public <K extends Serializable>  T get(K k){
+		List<String> identityFieldName = getIdentityFieldName();
+		if(identityFieldName.isEmpty())
+			return null;
+		return get(getIdentityFieldName().get(0), k);
+	}
+
+	/**
+	 * Returns the &lt;T&gt; typed entity whose identifier is passed
+	 * as parameter 
+	 * 
+	 * @param <K> the {@link Serializable} identifier type
+	 * 
+	 * @param identityFieldName the String identity filed name
+	 * @param k the &lt;K&gt; typed identifier 
+	 * 
+	 * @return the &lt;T&gt; typed entity for the specified &lt;K&gt; 
+	 * typed identifier
+	 */
+	public <K extends Serializable>  T get(String identityFieldName, K k){
 		return (T) getSession().createCriteria(getEntityType()
-			).add(Restrictions.eq(getIdentityFieldName(), k)
+			).add(Restrictions.eq(identityFieldName, k)
 			).uniqueResult();
 	}
 }

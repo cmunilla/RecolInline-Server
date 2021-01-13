@@ -24,12 +24,15 @@
 package cmssi.museum.dao.service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.SignatureException;
 import java.util.List;
 
 import javax.ejb.Stateless;
 
+import cmssi.museum.controler.api.DomainRole;
+import cmssi.museum.controler.api.FieldVisibility;
 import cmssi.museum.controler.api.format.sign.ArtifactSheetSigner;
 import cmssi.museum.dao.entity.Domain;
 import cmssi.museum.dao.entity.Field;
@@ -45,15 +48,17 @@ import cmssi.museum.database.api.service.SheetService;
 import cmssi.museum.database.api.service.UnauthorizedSheetAccessException;
 
 /**
- * the SheetService is an extended CRUDService dedicated to {@link Sheet} entities
+ * the SqlSheetService is an extended CRUDService dedicated to {@link Sheet} entities
+ * for SQL typed data source
  * 
  * @author cmunilla@cmssi.fr
  * @version 0.3
  */
 @Stateless
 public class SqlSheetService extends CRUDService<Sheet> implements SheetService {
-	
+
 	private LineService lineService;
+	private RoleService roleService;
 	private ArtifactSheetSigner<FieldFormat,ModelFormat,SheetFormat> signer;
 	
 	/**
@@ -159,39 +164,26 @@ public class SqlSheetService extends CRUDService<Sheet> implements SheetService 
 		return (List<FieldSkeleton>) query.list();
 	}
 	
-	@Override
-	public SheetFormat createSheet(Integer idMuseum, Integer idDomain, Integer idUser) throws UnauthorizedSheetAccessException {
-
-		var list = getSheetFields(idMuseum, idDomain, idUser);
-		var sheet = new SheetFormat();	
-		list.forEach(ln -> {	
-			ModelFormat mf = new ModelFormat(ln.getLabelModel());
-			FieldFormat ff = null;
-			String labelField = ln.getLabelField();
-			if(ln.isText()) {
-			  ff = new StringFieldFormat(labelField);
-			} else {
-			  ff = new FieldFormat(labelField);
-			}
-			ff.setConstraints(ln.getConstraints());
-			ff.setLabelType(ln.getLabelType());
-			ff.setVisibility(ln.getLabelVisibility());			
-			mf.append(ff);
-			sheet.append(mf);
-		});
-		try {
-			this.signer.sign(sheet);
-		} catch (SignatureException e) {
-			e.printStackTrace();
-		}
-		return sheet;
+	/*
+	 * (non-javadoc)
+	 * 
+	 */
+	private boolean isOnlyReaderOrLess(Integer idRole ) {
+		DomainRole role = roleService.getDomainRole(idRole);		
+		switch(role) {
+			case NONE:
+			case READER:
+			    return true;
+			case ADMINISTRATOR:
+			case VALIDATOR:
+			case WRITER:
+				break;
+			default:
+				break;
+	    }		
+		return false;
 	}
 
-	@Override
-	public SheetFormat deleteSheet(Integer idSheet, Integer idUser) throws UnauthorizedSheetAccessException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public SheetFormat getSheet(Integer idSheet, Integer idUser) throws UnauthorizedSheetAccessException {
@@ -236,10 +228,78 @@ public class SqlSheetService extends CRUDService<Sheet> implements SheetService 
 		}
 		return sheet;
 	}
+	
+	@Override
+	public SheetFormat createSheet(Integer idMuseum, Integer idDomain, Integer idUser) throws UnauthorizedSheetAccessException {
+		Integer idRole = roleService.getRoleId(idMuseum, idDomain, idUser);
+		if(idRole == null ||isOnlyReaderOrLess(idRole))
+			throw new UnauthorizedSheetAccessException("The defined user is not authorized to create a new sheet");
+
+		var list = getSheetFields(idMuseum, idDomain, idUser);
+		var sheet = new SheetFormat();	
+		list.forEach(ln -> {	
+			ModelFormat mf = new ModelFormat(ln.getLabelModel());
+			FieldFormat ff = null;
+			String labelField = ln.getLabelField();
+			if(ln.isText()) 
+			  ff = new StringFieldFormat(labelField);
+			else
+			  ff = new FieldFormat(labelField);
+			ff.setConstraints(ln.getConstraints());
+			ff.setLabelType(ln.getLabelType());
+			ff.setVisibility(ln.getLabelVisibility());			
+			mf.append(ff);
+			sheet.append(mf);
+		});
+		try {
+			this.signer.sign(sheet);
+		} catch (SignatureException e) {
+			e.printStackTrace();
+		}
+		return sheet;
+	}
+
+	@Override
+	public SheetFormat deleteSheet(Integer idSheet, Integer idUser) throws UnauthorizedSheetAccessException {		
+		Sheet sh = super.get(idSheet);
+		if(sh == null) 
+			return null;
+		Integer idDomain = sh.getIdDomain();
+		Integer idMuseum = sh.getIdMuseum();
+		Integer idRole = roleService.getRoleId(idMuseum, idDomain, idUser);
+		if(idRole == null ||isOnlyReaderOrLess(idRole))
+			throw new UnauthorizedSheetAccessException("The defined user is not authorized to delete the sheet");	
+		var sheet = getSheet(idSheet,idUser);
+		super.remove(sh);
+		return sheet;
+	}
 
 	@Override
 	public SheetFormat updateSheet(String sheet, Integer idUser) throws UnauthorizedSheetAccessException {
-		return null;
-	}
+		SheetFormat format = SheetFormat.valueOf(sheet);
+		try {
+			if(!this.signer.verify(format))
+				return null;
+		} catch (SignatureException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		Sheet sh = super.get(format.getIdentifier());
+		if(sh == null) {
+			return null;
+		}
+		Integer idMuseum = sh.getIdMuseum();
+		Integer idDomain = sh.getIdDomain();
 
+		Integer idRole = roleService.getRoleId(idMuseum, idDomain, idUser);
+		if(idRole == null ||isOnlyReaderOrLess(idRole))
+			throw new UnauthorizedSheetAccessException("The defined user is not authorized to update the sheet");
+		
+		format.stream().forEach(m -> m.stream().forEach(f -> {
+			if(f.getVisibility().equals(FieldVisibility.ENABLED)){
+				lineService.updateLine(format.getIdentifier(), f.getIdentifier(), f.doFormat());
+			}
+		}));
+		
+		return format;
+	}
 }

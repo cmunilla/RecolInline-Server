@@ -26,9 +26,14 @@ package cmssi.museum.dao.entity;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.ColumnResult;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.SqlResultSetMapping;
+import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
  
 /**
@@ -44,6 +49,19 @@ import javax.persistence.Table;
  * @author cmunilla@cmssi.fr 
  * @version 0.3
  */
+@SqlResultSetMappings({
+	@SqlResultSetMapping(
+        name = "integerRoleIdentifier", 
+        columns = { @ColumnResult(name = "RoleIdentifier") }
+    )
+})
+@NamedNativeQueries({
+    @NamedNativeQuery(
+		name = "FindRoleIdentifier",
+		query = "CALL GetIdRole(:idMuseumFk,:idDomainFk,:idUserFk)",
+		resultSetMapping = "integerRoleIdentifier"
+	)
+})
 @Entity
 @Table(name = "Role")
 public class Role implements Serializable
