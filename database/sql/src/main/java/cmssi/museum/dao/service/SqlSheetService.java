@@ -166,7 +166,6 @@ public class SqlSheetService extends CRUDService<Sheet> implements SheetService 
 	
 	/*
 	 * (non-javadoc)
-	 * 
 	 */
 	private boolean isOnlyReaderOrLess(Integer idRole ) {
 		DomainRole role = roleService.getDomainRole(idRole);		
@@ -183,7 +182,6 @@ public class SqlSheetService extends CRUDService<Sheet> implements SheetService 
 	    }		
 		return false;
 	}
-
 
 	@Override
 	public SheetFormat getSheet(Integer idSheet, Integer idUser) throws UnauthorizedSheetAccessException {
@@ -275,14 +273,8 @@ public class SqlSheetService extends CRUDService<Sheet> implements SheetService 
 	}
 
 	@Override
-	public SheetFormat updateSheet(String sheet, Integer idUser) throws UnauthorizedSheetAccessException {
+	public SheetFormat updateSheet(String sheet, Integer idUser) throws UnauthorizedSheetAccessException {		
 		SheetFormat format = SheetFormat.valueOf(sheet);
-		try {
-			if(!this.signer.verify(format))
-				return null;
-		} catch (SignatureException | UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 		Sheet sh = super.get(format.getIdentifier());
 		if(sh == null) {
 			return null;
@@ -294,6 +286,12 @@ public class SqlSheetService extends CRUDService<Sheet> implements SheetService 
 		if(idRole == null ||isOnlyReaderOrLess(idRole))
 			throw new UnauthorizedSheetAccessException("The defined user is not authorized to update the sheet");
 		
+		try {
+			if(!this.signer.verify(format))
+				return null;
+		} catch (SignatureException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		format.stream().forEach(m -> m.stream().forEach(f -> {
 			if(f.getVisibility().equals(FieldVisibility.ENABLED)){
 				lineService.updateLine(format.getIdentifier(), f.getIdentifier(), f.doFormat());
