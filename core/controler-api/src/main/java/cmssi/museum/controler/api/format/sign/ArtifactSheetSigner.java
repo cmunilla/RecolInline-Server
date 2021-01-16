@@ -217,6 +217,7 @@ public class ArtifactSheetSigner<
 	 * Calculates and returns the String hash of the {@link ArtifactSheet} passed as parameter
 	 *  
 	 * @param sheet the extended {@link ArtifactSheet} to  calculate the String hash of
+	 * @param signature the String signature to be included when calculating the hash String representation
 	 * 
 	 * @return the String hash of the specified {@link ArtifactSheet}
 	 * 

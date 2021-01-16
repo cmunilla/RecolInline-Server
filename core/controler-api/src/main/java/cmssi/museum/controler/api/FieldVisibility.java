@@ -42,9 +42,4 @@ public enum FieldVisibility implements Serializable
 	DISABLED,
 	ENABLED;
 	
-    /**
-     * Constructor
-     */
-    private FieldVisibility() {}
-     
 }

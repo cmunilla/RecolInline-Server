@@ -44,10 +44,4 @@ public enum DomainRole implements Serializable
 	 WRITER,
 	 READER,
 	 NONE;
-     
-    /**
-     * Constructor
-     */
-    private DomainRole() {}
-     
 }
