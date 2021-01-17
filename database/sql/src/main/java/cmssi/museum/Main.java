@@ -19,7 +19,7 @@ public class Main {
         session.beginTransaction();
          
         Domain domain = new Domain();
-        domain.setRefDomain(new Integer(1));
+        domain.setRefDomain(Integer.valueOf(1));
         domain.setLabel("TESTDOMAIN");
          
         session.save(domain);
@@ -28,7 +28,7 @@ public class Main {
         DomainService ds = new DomainService();
 
         Domain d = new Domain();
-        d.setRefDomain(new Integer(1));
+        d.setRefDomain(Integer.valueOf(1));
         d.setLabel("TESTDOMAIN2");
         ds.add(d);
         System.out.println(d.getIdDomain());

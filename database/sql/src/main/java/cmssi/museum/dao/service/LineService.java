@@ -79,10 +79,12 @@ public class LineService extends CRUDService<Line> {
 	}
 
 	/**
+	 * Update the value of the line whose {@link Sheet} identifier and {@link Field} identifier are 
+	 * passed as parameter
 	 * 
-	 * @param idSheet
-	 * @param idField
-	 * @param value
+	 * @param idSheet the {@link Sheet} identifier
+	 * @param idField the {@link Field identifier
+	 * @param value the updated String value 
 	 */
 	public void updateLine(Integer idSheet, Integer idField, String value){
 		Line line = getLinesMap(idSheet).get(idField);
