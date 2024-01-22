@@ -3,11 +3,6 @@
  * @version 0.3
  */
 open module jpms.adaptive.hibernate {
-
-	requires transitive java.naming;
-	requires transitive java.sql;
-	requires transitive java.desktop;
-
 	exports antlr;
 	exports antlr.ASdebug;
 	exports antlr.actions.cpp;
