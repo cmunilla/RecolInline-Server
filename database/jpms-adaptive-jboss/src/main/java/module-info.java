@@ -3,10 +3,6 @@
  * @version 0.3 
  */
 open module jpms.adaptive.jboss {
-
-	requires java.xml;
-	requires java.transaction.xa;
-	requires jpms.adaptive.hibernate;
 	
 	exports org.jboss.security.client;
 	exports org.jboss.deployers.structure.spi.helpers;
